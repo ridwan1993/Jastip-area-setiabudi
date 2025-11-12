@@ -1,184 +1,183 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jastip Setiabudi → Cilejit</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:#f7f9f8; --card:#fff; --accent:#2f8f4a; --muted:#6b6b6b;
-}
-* {box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-body {margin:0;background:var(--bg);color:#111}
-header {padding:16px;text-align:center;background:var(--card);border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
-h1 {margin:0;font-size:18px}
-.badge {background:#e6f4ea;color:var(--accent);font-weight:600;font-size:13px;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:6px}
-.filters {display:flex;gap:8px;padding:10px 16px;overflow-x:auto}
-.chip {background:#fff;border:1px solid #dcdcdc;padding:6px 14px;border-radius:20px;font-size:14px;cursor:pointer;white-space:nowrap}
-.chip.active {background:var(--accent);color:#fff;border-color:var(--accent)}
-.grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:16px}
-.card {background:var(--card);border-radius:12px;padding:12px;box-shadow:0 2px 5px rgba(0,0,0,0.05);display:flex;flex-direction:column;justify-content:space-between}
-.card img {width:100%;border-radius:10px;height:130px;object-fit:cover}
-.card h3 {margin:8px 0 4px;font-size:15px}
-.card p {margin:0;font-size:13px;color:var(--muted)}
-.price {font-weight:700;margin-top:4px}
-.btnrow {display:flex;gap:6px;margin-top:8px}
-.btn {flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
-.btn.add {background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
-.btn.quick {background:var(--accent);color:#fff}
-.cartbar {position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#fff,#f8fff9);padding:10px;border-radius:12px;border:1px solid #e6efe6;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(16,40,12,0.08)}
-.cart-info {flex:1}
-.cart-summary {font-size:13px;color:var(--muted)}
-.cart-total {font-weight:700;font-size:16px}
-.detail-order {
-  position:fixed;bottom:0;left:0;right:0;background:#fff;
-  border-radius:16px 16px 0 0;box-shadow:0 -5px 20px rgba(0,0,0,0.15);
-  transform:translateY(100%);transition:transform .3s ease;
-  max-height:80vh;overflow-y:auto;padding:16px;
-}
-.detail-order.active {transform:translateY(0)}
-.detail-header {display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.detail-header h2 {margin:0;font-size:16px;}
-.detail-close {background:none;border:none;font-size:20px;cursor:pointer;}
-.order-item {display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}
-.order-name {font-size:14px}
-.order-qty {display:flex;align-items:center;gap:6px}
-.qty-btn {width:24px;height:24px;text-align:center;line-height:24px;background:#f0f0f0;border-radius:50%;cursor:pointer}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jastip Setiabudi → Cilejit</title>
+  <style>
+    body{margin:0;font-family:Inter,system-ui,Arial;background:#f7f9f8;color:#111}
+    header{background:#fff;padding:14px;border-bottom:1px solid #eaeaea;text-align:center;position:sticky;top:0;z-index:10}
+    header h1{margin:0;font-size:16px}
+    main{padding:12px}
+    select{padding:6px 8px;border-radius:8px;margin-bottom:12px;border:1px solid #ddd}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+    .card{background:#fff;border-radius:10px;padding:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08);position:relative}
+    .img{height:100px;border-radius:8px;background:#f3f3f3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .img img{width:100%;height:100%;object-fit:cover}
+    .name{font-size:14px;font-weight:600;margin-top:8px}
+    .shop{font-size:12px;color:#666}
+    .price{font-size:14px;font-weight:700;margin-top:4px}
+    .btn{background:#2f8f4a;color:#fff;border:0;padding:6px 8px;border-radius:8px;width:100%;margin-top:6px;font-weight:600}
+    .btn-cart{position:fixed;bottom:16px;right:16px;background:#0077cc;color:#fff;border:none;padding:12px 16px;border-radius:50%;font-size:18px;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+    .promo{position:absolute;top:8px;right:8px;background:#ff5252;color:#fff;padding:2px 6px;font-size:11px;border-radius:6px}
+    footer{text-align:center;padding:14px;font-size:13px;color:#777}
+    /* Modal */
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;z-index:100}
+    .modal-content{background:#fff;border-radius:12px;padding:16px;width:90%;max-width:400px;max-height:80vh;overflow:auto}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;margin:8px 0;border-bottom:1px solid #eee;padding-bottom:6px}
+    .cart-item div{font-size:14px}
+    .cart-controls button{border:0;background:#eee;padding:4px 8px;border-radius:6px;margin:0 4px}
+    .checkout-btn{background:#2f8f4a;color:#fff;border:0;padding:8px 12px;border-radius:8px;width:100%;margin-top:12px;font-weight:600}
+  </style>
 </head>
 <body>
-<header>
-  <h1>💼 Jastip Setiabudi → Cilejit</h1>
-  <div class="badge">Order sebelum 16:00 dikirim malam hari 🚆</div>
-</header>
+  <header>
+    <h1>💼 Jastip Setiabudi → Cilejit</h1>
+    <div style="font-size:13px;color:#666">Order sebelum 16:00 dikirim malam hari 🚆</div>
+  </header>
 
-<div class="filters" id="filterContainer">
-  <div class="chip active" data-cat="Semua">Semua</div>
-</div>
+  <main>
+    <select id="categoryFilter" onchange="filterCategory()">
+      <option value="">Semua Kategori</option>
+    </select>
+    <div id="products" class="grid">Memuat data...</div>
+  </main>
 
-<section class="grid" id="products">Memuat data...</section>
+  <button class="btn-cart" onclick="openCart()">🛒</button>
 
-<div class="cartbar" id="cartbar" style="display:none">
-  <div class="cart-info">
-    <div class="cart-summary" id="cart-count">0 item</div>
-    <div class="cart-total" id="cart-total">Rp0</div>
+  <div id="cartModal" class="modal" onclick="closeCart(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3>🛍️ Pesanan Kamu</h3>
+      <div id="cartItems"></div>
+      <div id="cartTotal" style="margin-top:8px;font-weight:bold"></div>
+      <button class="checkout-btn" onclick="checkout()">Kirim ke WhatsApp</button>
+    </div>
   </div>
-  <button class="btn quick" id="detailOrderBtn">Lihat Order</button>
-</div>
 
-<div class="detail-order" id="detailOrder">
-  <div class="detail-header">
-    <h2>Detail Order</h2>
-    <button class="detail-close" id="closeDetail">✖</button>
-  </div>
-  <div id="orderList"></div>
-</div>
+  <footer>
+    Hubungi saya: <a href="https://wa.me/6289668081647">WhatsApp</a>
+  </footer>
 
-<script>
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1kc3sz6SwfZuxVQartjwif3npX85CiaMRcr_tPWRFD80/export?format=csv";
+  <script>
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/1kc3sz6SwfZuxVQartjwif3npX85CiaMRcr_tPWRFD80/export?format=csv";
+    let PRODUCTS = [];
+    let currentCategory = '';
+    let CART = JSON.parse(localStorage.getItem("cart") || "[]");
 
-let products = [];
-let cart = {};
-let categories = new Set();
+    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
 
-function formatRp(n){return 'Rp'+n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");}
+    fetch(SHEET_URL)
+      .then(res => res.text())
+      .then(csv => {
+        const rows = csv.split("\n").slice(1);
+        PRODUCTS = rows.map(r=>{
+          const [name,shop,price,img,fee,category,promo] = r.split(",");
+          return {name,shop,price:+price,img,fee:+fee,category,promo:promo?.trim().toLowerCase()};
+        }).filter(p=>p.name);
+        populateCategories();
+        renderProducts();
+      });
 
-async function loadData() {
-  const res = await fetch(SHEET_URL);
-  const csv = await res.text();
-  const rows = csv.split("\n").slice(1);
-  products = rows.map((r,i)=>{
-    const [nama,harga,img,kategori,promo] = r.split(",");
-    return { id:i+1, nama, harga:+harga, img, kategori:kategori||"Lainnya", promo:promo?.trim()||"Tidak" };
-  });
-  products.forEach(p=>categories.add(p.kategori));
-  renderFilters();
-  renderProducts(products);
-}
+    function populateCategories(){
+      const categories = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
+      const select = document.getElementById('categoryFilter');
+      categories.forEach(c=>{
+        const opt=document.createElement('option');
+        opt.value=c;
+        opt.textContent=c;
+        select.appendChild(opt);
+      });
+    }
 
-function renderFilters(){
-  const container=document.getElementById("filterContainer");
-  categories.forEach(cat=>{
-    const chip=document.createElement("div");
-    chip.className="chip";
-    chip.textContent=cat;
-    chip.dataset.cat=cat;
-    chip.onclick=()=>filterByCategory(cat);
-    container.appendChild(chip);
-  });
-}
+    function filterCategory(){
+      currentCategory = document.getElementById('categoryFilter').value;
+      renderProducts();
+    }
 
-function filterByCategory(cat){
-  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
-  document.querySelector(`.chip[data-cat="${cat}"]`).classList.add("active");
-  renderProducts(cat==="Semua"?products:products.filter(p=>p.kategori===cat));
-}
+    function renderProducts(){
+      const grid = document.getElementById('products');
+      grid.innerHTML = '';
+      PRODUCTS.filter(p => !currentCategory || p.category===currentCategory)
+      .forEach(p=>{
+        const div = document.createElement('div');
+        div.className='card';
+        const promoTag = p.promo==='ya' ? `<div class='promo'>Promo</div>` : '';
+        div.innerHTML = `
+          ${promoTag}
+          <div class='img'>${p.img ? `<img src='${p.img}'>` : p.shop}</div>
+          <div class='name'>${p.name}</div>
+          <div class='shop'>${p.shop}</div>
+          <div class='price'>${formatRp(p.price)} + Jastip ${formatRp(p.fee)}</div>
+          <button class='btn' onclick='addToCart("${p.name}", ${p.price+p.fee})'>Titip</button>
+          <button class='btn' style='background:#0077cc;margin-top:4px' onclick='addToCart("${p.name}", ${p.price+p.fee}, true)'>Beli Cepat</button>
+        `;
+        grid.appendChild(div);
+      });
+    }
 
-function renderProducts(list){
-  const grid=document.getElementById("products");
-  grid.innerHTML="";
-  list.forEach(p=>{
-    const div=document.createElement("div");
-    div.className="card";
-    div.innerHTML=`
-      <img src="${p.img}">
-      <h3>${p.nama}</h3>
-      <p>${p.kategori} ${p.promo=="Ya"?"• Promo":""}</p>
-      <div class="price">${formatRp(p.harga)}</div>
-      <div class="btnrow">
-        <button class="btn add" onclick="addToCart(${p.id})">Titip</button>
-        <button class="btn quick">Beli Cepat</button>
-      </div>`;
-    grid.appendChild(div);
-  });
-}
+    function addToCart(name, total, quick=false){
+      const item = CART.find(i=>i.name===name);
+      if(item){ item.qty++; } else { CART.push({name, total, qty:1}); }
+      saveCart();
+      if(quick){ checkout(); }
+    }
 
-function addToCart(id){
-  if(!cart[id])cart[id]={...products.find(p=>p.id==id),qty:0};
-  cart[id].qty++;
-  updateCart();
-}
+    function saveCart(){
+      localStorage.setItem("cart", JSON.stringify(CART));
+    }
 
-function updateCart(){
-  const items=Object.values(cart);
-  const totalQty=items.reduce((a,b)=>a+b.qty,0);
-  const totalPrice=items.reduce((a,b)=>a+b.harga*b.qty,0);
-  document.getElementById("cartbar").style.display = totalQty>0?"flex":"none";
-  document.getElementById("cart-count").textContent=`${totalQty} item`;
-  document.getElementById("cart-total").textContent=formatRp(totalPrice);
-}
+    function openCart(){
+      document.getElementById('cartModal').style.display='flex';
+      renderCart();
+    }
 
-function showDetail(){
-  const detail=document.getElementById("detailOrder");
-  detail.classList.add("active");
-  const list=document.getElementById("orderList");
-  list.innerHTML="";
-  Object.values(cart).forEach(item=>{
-    const div=document.createElement("div");
-    div.className="order-item";
-    div.innerHTML=`
-      <div class="order-name">${item.nama}</div>
-      <div class="order-qty">
-        <div class="qty-btn" onclick="changeQty(${item.id},-1)">−</div>
-        <div>${item.qty}</div>
-        <div class="qty-btn" onclick="changeQty(${item.id},1)">+</div>
-      </div>`;
-    list.appendChild(div);
-  });
-}
+    function closeCart(e){
+      document.getElementById('cartModal').style.display='none';
+    }
 
-function changeQty(id,delta){
-  cart[id].qty+=delta;
-  if(cart[id].qty<=0) delete cart[id];
-  updateCart();
-  showDetail();
-}
+    function renderCart(){
+      const items = document.getElementById('cartItems');
+      const totalDiv = document.getElementById('cartTotal');
+      items.innerHTML='';
+      let total=0;
+      if(CART.length===0){ items.innerHTML='<p>Belum ada barang dititip.</p>'; totalDiv.textContent=''; return; }
+      CART.forEach((i,idx)=>{
+        total += i.total*i.qty;
+        items.innerHTML += `
+          <div class="cart-item">
+            <div>${i.name}<br><small>${formatRp(i.total)} x ${i.qty}</small></div>
+            <div class="cart-controls">
+              <button onclick="changeQty(${idx},-1)">-</button>
+              <button onclick="changeQty(${idx},1)">+</button>
+              <button onclick="removeItem(${idx})">❌</button>
+            </div>
+          </div>`;
+      });
+      totalDiv.textContent = "Total: " + formatRp(total);
+    }
 
-document.getElementById("detailOrderBtn").onclick=showDetail;
-document.getElementById("closeDetail").onclick=()=>document.getElementById("detailOrder").classList.remove("active");
+    function changeQty(index, delta){
+      CART[index].qty += delta;
+      if(CART[index].qty <= 0){ CART.splice(index,1); }
+      saveCart(); renderCart();
+    }
 
-loadData();
-</script>
+    function removeItem(index){
+      CART.splice(index,1);
+      saveCart(); renderCart();
+    }
+
+    function checkout(){
+      if(CART.length===0) return alert('Keranjang masih kosong!');
+      let msg = "Halo, saya mau titip:\n";
+      let total=0;
+      CART.forEach(i=>{
+        msg += `- ${i.name} (${i.qty}x ${formatRp(i.total)})\n`;
+        total += i.total*i.qty;
+      });
+      msg += `\nTotal: ${formatRp(total)}\nDikirim ke Cilejit malam ini 🚆`;
+      window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`,'_blank');
+    }
+  </script>
 </body>
 </html>
