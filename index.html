@@ -7,26 +7,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b; --danger:#d9534f;
-      --fee:10000;
+      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b; --danger:#d9534f; --fee:10000;
     }
     *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
     body{margin:0;background:var(--bg);color:#111}
-    header{background:linear-gradient(90deg,#fff 0%, #f0fff5 100%);padding:14px 16px;border-bottom:1px solid #e6efe6;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
+    header{background:linear-gradient(90deg,#fff 0%, #f0fff5 100%);
+      padding:14px 16px;border-bottom:1px solid #e6efe6;display:flex;align-items:center;justify-content:space-between}
+    .logo-area{display:flex;align-items:center;gap:12px}
     .logo{width:44px;height:44px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
     .title{font-size:15px;font-weight:600}
     .subtitle{font-size:12px;color:var(--muted)}
+    .cart-btn{position:relative;background:none;border:none;cursor:pointer;font-size:22px}
+    .cart-count{position:absolute;top:-5px;right:-8px;background:var(--accent);color:#fff;border-radius:999px;
+      padding:2px 6px;font-size:11px;font-weight:600}
+
     main{padding:14px}
-    .hero{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(47,143,74,0.06);display:flex;gap:12px;align-items:center}
+    .hero{background:var(--card);padding:12px;border-radius:12px;
+      box-shadow:0 6px 18px rgba(47,143,74,0.06);display:flex;gap:12px;align-items:center}
     .hero .info{flex:1}
     .hero h1{margin:0;font-size:16px}
     .hero p{margin:6px 0 0;color:var(--muted);font-size:13px}
     .badge{background:var(--accent);color:#fff;padding:6px 8px;border-radius:8px;font-size:13px}
     .filters{display:flex;gap:8px;margin:12px 0}
-    .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #e8efe8;font-size:13px;cursor:pointer}
+    .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #e8efe8;font-size:13px}
     .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-    .card{background:var(--card);padding:10px;border-radius:12px;border:1px solid #eef6ee;position:relative}
-    .img{height:100px;background:linear-gradient(135deg,#f3f9f3,#fff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#8aa98a;font-weight:700}
+    .card{background:var(--card);padding:10px;border-radius:12px;border:1px solid #eef6ee}
+    .img{height:100px;background:linear-gradient(135deg,#f3f9f3,#fff);border-radius:8px;display:flex;
+      align-items:center;justify-content:center;color:#8aa98a;font-weight:700}
     .pname{font-size:13px;margin:8px 0 4px;font-weight:600}
     .shop{font-size:12px;color:var(--muted)}
     .price{font-weight:700;margin-top:6px}
@@ -34,25 +41,37 @@
     .btn{flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
     .btn.add{background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
     .btn.quick{background:var(--accent);color:#fff}
-    .carticon{position:fixed;bottom:16px;right:16px;background:var(--accent);color:#fff;border:none;width:54px;height:54px;border-radius:50%;font-size:22px;box-shadow:0 6px 16px rgba(47,143,74,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50}
-    .cartcount{position:absolute;top:4px;right:6px;background:#ff5a5a;color:#fff;font-size:12px;padding:2px 6px;border-radius:10px;display:none}
-    .cartdrawer{position:fixed;bottom:-100%;left:0;right:0;background:#fff;border-top-left-radius:16px;border-top-right-radius:16px;box-shadow:0 -6px 20px rgba(0,0,0,0.2);padding:16px;transition:bottom 0.3s ease;z-index:100}
-    .cartdrawer.active{bottom:0}
-    .cart-item{display:flex;justify-content:space-between;align-items:center;margin:8px 0;padding-bottom:6px;border-bottom:1px solid #eee}
-    .cart-item-name{font-size:13px}
-    .cart-controls button{background:#eef6ee;border:none;border-radius:6px;padding:4px 8px;margin:0 3px;cursor:pointer}
-    .checkout{background:var(--accent);color:#fff;border:0;padding:10px;width:100%;border-radius:10px;font-weight:600;margin-top:12px}
+
+    /* Cart popup */
+    .cart-popup{
+      position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;
+      box-shadow:0 -10px 30px rgba(0,0,0,0.1);padding:14px;display:none;flex-direction:column;max-height:70vh;overflow:auto;
+      animation:slideUp .3s ease-out;
+    }
+    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:6px 0}
+    .cart-item-name{flex:1;font-size:13px}
+    .qty-controls{display:flex;align-items:center;gap:6px}
+    .qty-btn{background:#e8f5e9;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--accent)}
+    .cart-footer{margin-top:12px;text-align:right}
+    .cart-total{font-weight:700;margin-bottom:8px}
+    .btn-whatsapp{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:none;font-weight:600;width:100%}
+    .close-popup{background:none;border:none;font-size:18px;float:right;cursor:pointer;color:var(--muted)}
+
     footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
     @media(min-width:640px){main{max-width:720px;margin:0 auto} .grid{grid-template-columns:repeat(3,1fr)}}
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">JS</div>
-    <div>
-      <div class="title">💼 JASTIP SETIABUDI → CILEJIT</div>
-      <div class="subtitle">Skincare & Bodycare — Fee Rp10.000/item</div>
+    <div class="logo-area">
+      <div class="logo">JS</div>
+      <div>
+        <div class="title">💼 JASTIP SETIABUDI → CILEJIT</div>
+        <div class="subtitle">Skincare & Bodycare — Fee Rp10.000/item</div>
+      </div>
     </div>
+    <button class="cart-btn" id="btnCart">🛒<span class="cart-count" id="cartCount" style="display:none">0</span></button>
   </header>
 
   <main>
@@ -64,25 +83,23 @@
       <div class="badge">Open • Hari ini</div>
     </section>
 
-    <div class="filters" style="margin-top:12px">
-      <div class="chip" onclick="filterCategory('')">Semua</div>
-      <div class="chip" onclick="filterCategory('Skincare')">Skincare</div>
-      <div class="chip" onclick="filterCategory('Bodycare')">Bodycare</div>
-      <div class="chip" onclick="filterCategory('Promo')">Promo</div>
+    <div class="filters">
+      <div class="chip">Skincare</div>
+      <div class="chip">Bodycare</div>
+      <div class="chip">Promo</div>
     </div>
 
-    <section class="grid" id="products"></section>
+    <section class="grid" id="products">Memuat data...</section>
   </main>
 
-  <button class="carticon" onclick="toggleCart()">
-    🛒<span id="cartcount" class="cartcount">0</span>
-  </button>
-
-  <div id="cartdrawer" class="cartdrawer">
-    <h3>🛍️ Pesanan Kamu</h3>
-    <div id="cartitems"></div>
-    <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
-    <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
+  <div class="cart-popup" id="cartPopup">
+    <button class="close-popup" id="closePopup">✕</button>
+    <h3>🛍️ Detail Titipan</h3>
+    <div id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total" id="cartTotal">Total: Rp0</div>
+      <button class="btn-whatsapp" id="btnOrderWA">Order via WhatsApp</button>
+    </div>
   </div>
 
   <footer>
@@ -92,124 +109,112 @@
 
   <script>
     const PRODUCTS = [
-      {id:1,name:'Tea Tree Cleanser 250ml',shop:'The Body Shop',price:139000,category:'Skincare'},
-      {id:2,name:'Scarlett Brightly Serum 30ml',shop:'Scarlett',price:75000,category:'Skincare'},
-      {id:3,name:'Garnier Micellar 125ml',shop:'Guardian',price:40000,category:'Skincare',promo:true},
-      {id:4,name:'Emina Face Wash',shop:'Emina',price:25000,category:'Skincare'},
-      {id:5,name:'Nivea Body Lotion 200ml',shop:'Watsons',price:58000,category:'Bodycare'},
-      {id:6,name:'Wardah Lightening',shop:'Wardah',price:65000,category:'Bodycare'}
+      {id:1,name:'Tea Tree Cleanser 250ml',shop:'The Body Shop',price:139000,category:'Skincare',promo:'Tidak'},
+      {id:2,name:'Scarlett Brightly Serum 30ml',shop:'Scarlett',price:75000,category:'Skincare',promo:'Ya'},
+      {id:3,name:'Garnier Micellar 125ml',shop:'Guardian',price:40000,category:'Skincare',promo:'Tidak'},
+      {id:4,name:'Emina Face Wash',shop:'Emina',price:25000,category:'Skincare',promo:'Ya'},
+      {id:5,name:'Nivea Body Lotion 200ml',shop:'Watsons',price:58000,category:'Bodycare',promo:'Tidak'},
+      {id:6,name:'Wardah Lightening',shop:'Wardah',price:65000,category:'Skincare',promo:'Tidak'}
     ];
+
     const feePerItem = 10000;
-    const cart = JSON.parse(localStorage.getItem("jastip_cart")||"{}");
-    let currentCategory='';
+    const cart = {};
 
     const productsEl = document.getElementById('products');
-    const cartDrawer = document.getElementById('cartdrawer');
-    const cartCount = document.getElementById('cartcount');
+    const cartCount = document.getElementById('cartCount');
+    const cartPopup = document.getElementById('cartPopup');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
 
-    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
-
-    function filterCategory(cat){currentCategory=cat;renderProducts();}
+    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
 
     function renderProducts(){
       productsEl.innerHTML='';
-      PRODUCTS.filter(p=>!currentCategory||p.category===currentCategory||(currentCategory==='Promo'&&p.promo))
-      .forEach(p=>{
-        const card=document.createElement('div');
-        card.className='card';
+      PRODUCTS.forEach(p=>{
+        const card=document.createElement('div');card.className='card';
         card.innerHTML=`
           <div class="img">${p.shop.split(' ')[0]}</div>
           <div class="pname">${p.name}</div>
           <div class="shop">${p.shop}</div>
           <div class="price">${formatRp(p.price)}</div>
           <div class="cta">
-            <button class="btn add" onclick="addToCart(${p.id})">+ Titip</button>
-            <button class="btn quick" onclick="quickOrder(${p.id})">Beli Cepat</button>
+            <button class="btn add" data-id="${p.id}">+ Titip</button>
+            <button class="btn quick" data-id="${p.id}">Beli Cepat</button>
           </div>`;
         productsEl.appendChild(card);
       });
-      updateCartCount();
+      document.querySelectorAll('.btn.add').forEach(b=>b.onclick=e=>addToCart(+e.target.dataset.id));
+      document.querySelectorAll('.btn.quick').forEach(b=>b.onclick=e=>quickOrder(+e.target.dataset.id));
     }
 
     function addToCart(id){
-      const p=PRODUCTS.find(x=>x.id==id);
-      if(!p)return;
-      if(!cart[id])cart[id]={...p,qty:0};
-      cart[id].qty++;
-      saveCart();
-      updateCartCount();
+      if(!cart[id]) cart[id]=0;
+      cart[id]++;
+      updateCartCounter();
     }
 
     function quickOrder(id){
       addToCart(id);
-      openCart();
+      openPopup();
     }
 
-    function saveCart(){
-      localStorage.setItem("jastip_cart",JSON.stringify(cart));
+    function updateCartCounter(){
+      const count=Object.values(cart).reduce((a,b)=>a+b,0);
+      if(count>0){cartCount.style.display='inline';cartCount.textContent=count;}
+      else cartCount.style.display='none';
     }
 
-    function updateCartCount(){
-      const totalQty=Object.values(cart).reduce((a,b)=>a+b.qty,0);
-      cartCount.textContent=totalQty;
-      cartCount.style.display=totalQty>0?'inline-block':'none';
-    }
-
-    function toggleCart(){
-      cartDrawer.classList.toggle('active');
+    function openPopup(){
       renderCart();
+      cartPopup.style.display='flex';
     }
 
-    function openCart(){cartDrawer.classList.add('active');renderCart();}
+    function closePopup(){
+      cartPopup.style.display='none';
+    }
+
     function renderCart(){
-      const list=document.getElementById('cartitems');
-      const totalDiv=document.getElementById('carttotal');
-      list.innerHTML='';
+      cartItemsEl.innerHTML='';
       let total=0;
-      const items=Object.values(cart);
-      if(items.length===0){list.innerHTML='<p>Keranjang kosong.</p>';totalDiv.textContent='';return;}
-      items.forEach(i=>{
-        const subtotal=(i.price+feePerItem)*i.qty;
-        total+=subtotal;
-        list.innerHTML+=`
-          <div class="cart-item">
-            <div class="cart-item-name">${i.name}<br><small>${formatRp(i.price)} + Fee ${formatRp(feePerItem)}</small></div>
-            <div class="cart-controls">
-              <button onclick="changeQty(${i.id},-1)">-</button>
-              <span>${i.qty}</span>
-              <button onclick="changeQty(${i.id},1)">+</button>
-              <button onclick="removeItem(${i.id})">❌</button>
-            </div>
-          </div>`;
+      Object.entries(cart).forEach(([id,q])=>{
+        const p=PRODUCTS.find(x=>x.id==id);
+        const sub=(p.price+feePerItem)*q;
+        total+=sub;
+        const div=document.createElement('div');div.className='cart-item';
+        div.innerHTML=`
+          <div class="cart-item-name">${p.name}<br><small>${p.shop}</small></div>
+          <div class="qty-controls">
+            <button class="qty-btn" onclick="decreaseQty(${id})">−</button>
+            <span>${q}</span>
+            <button class="qty-btn" onclick="increaseQty(${id})">+</button>
+          </div>
+          <div>${formatRp(sub)}</div>`;
+        cartItemsEl.appendChild(div);
       });
-      totalDiv.textContent='Total: '+formatRp(total);
+      cartTotalEl.textContent='Total: '+formatRp(total);
     }
 
-    function changeQty(id,delta){
-      if(!cart[id])return;
-      cart[id].qty+=delta;
-      if(cart[id].qty<=0)delete cart[id];
-      saveCart();renderCart();updateCartCount();
+    function increaseQty(id){addToCart(id);renderCart();}
+    function decreaseQty(id){
+      if(cart[id]){cart[id]--;if(cart[id]<=0) delete cart[id];}
+      updateCartCounter();renderCart();
     }
 
-    function removeItem(id){
-      delete cart[id];
-      saveCart();renderCart();updateCartCount();
-    }
-
-    function checkout(){
-      const items=Object.values(cart);
-      if(items.length===0)return alert('Keranjang kosong!');
-      let msg='Halo, saya mau titip:\n';
-      let total=0;
-      items.forEach(i=>{
-        const subtotal=(i.price+feePerItem)*i.qty;
-        total+=subtotal;
-        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price+feePerItem)})\n`;
+    function sendWhatsApp(){
+      if(Object.keys(cart).length===0) return alert('Cart kosong');
+      let lines=[];
+      Object.entries(cart).forEach(([id,q])=>{
+        const p=PRODUCTS.find(x=>x.id==id);
+        lines.push(`${q}x ${p.name} (${p.shop}) @${formatRp(p.price)} + Fee ${formatRp(feePerItem)}`);
       });
-      msg+=`\nTotal: ${formatRp(total)}\n`;
-      window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`,'_blank');
+      const totalText='Total: '+cartTotalEl.textContent.split(': ')[1];
+      const message=encodeURIComponent('Halo, saya mau titip:\n'+lines.join('\n')+'\n'+totalText);
+      window.open('https://wa.me/6281234567890?text='+message,'_blank');
     }
+
+    document.getElementById('btnCart').onclick=openPopup;
+    document.getElementById('closePopup').onclick=closePopup;
+    document.getElementById('btnOrderWA').onclick=sendWhatsApp;
 
     renderProducts();
   </script>
