@@ -7,7 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b; --fee:10000;
+      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b;
+      --fee:10000;
     }
     *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
     body{margin:0;background:var(--bg);color:#111}
@@ -34,7 +35,7 @@
     .btn{flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
     .btn.add{background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
     .btn.quick{background:var(--accent);color:#fff}
-    .cartbar{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#fff,#f8fff9);padding:10px;border-radius:12px;border:1px solid #e6efe6;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(16,40,12,0.08)}
+    .cartbar{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#fff,#f8fff9);padding:10px;border-radius:12px;border:1px solid #e6efe6;display:none;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(16,40,12,0.08)}
     .cart-info{flex:1}
     .cart-summary{font-size:13px;color:var(--muted)}
     .cart-total{font-weight:700;font-size:16px}
@@ -60,18 +61,10 @@
       <div class="badge">Open • Hari ini</div>
     </section>
 
-    <div class="filters">
-      <div class="chip">Skincare</div>
-      <div class="chip">Bodycare</div>
-      <div class="chip">Promo</div>
-    </div>
-
-    <section class="grid" id="products">
-      Memuat data...
-    </section>
+    <section class="grid" id="products">Memuat data...</section>
   </main>
 
-  <div class="cartbar" id="cartbar" style="display:none">
+  <div class="cartbar" id="cartbar">
     <div class="cart-info">
       <div class="cart-summary" id="cart-count">0 item</div>
       <div class="cart-total" id="cart-total">Rp0</div>
@@ -80,26 +73,26 @@
   </div>
 
   <footer>
-    <div>Jastip Setiabudi • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="https://wa.me/6289668081647" id="waLink">Chat WhatsApp</a></div>
+    <div>Jadwal: Senin–Jumat • Order cutoff 16:00</div>
+    <div style="margin-top:6px">Contact: <a href="https://wa.me/6281234567890" id="waLink">Chat WhatsApp</a></div>
   </footer>
 
   <script>
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/1kc3sz6SwfZuxVQartjwif3npX85CiaMRcr_tPWRFD80/export?format=csv";
     const feePerItem = 10000;
     const productsEl = document.getElementById('products');
+    const cartbar = document.getElementById('cartbar');
     const cart = {};
 
     function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
 
-    // Fetch data from Google Sheet
     fetch(SHEET_URL)
-      .then(res => res.text())
-      .then(csv => {
+      .then(r=>r.text())
+      .then(csv=>{
         const rows = csv.split("\n").slice(1);
         const PRODUCTS = rows.map(r=>{
           const [name,shop,price,img,fee] = r.split(",");
-          return {id:Math.random(),name,shop,price:+price,img,fee:+fee||feePerItem};
+          return {id:name, name, shop, price:+price, img, fee:+fee||feePerItem};
         });
         renderProducts(PRODUCTS);
       });
@@ -107,55 +100,64 @@
     function renderProducts(PRODUCTS){
       productsEl.innerHTML='';
       PRODUCTS.forEach(p=>{
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `
-          <div class="img">${p.img ? `<img src="${p.img}">` : p.shop[0]}</div>
+        const card = document.createElement('div');
+        card.className='card';
+        card.innerHTML=`
+          <div class="img">${p.img ? `<img src='${p.img}'>` : p.shop.split(' ')[0]}</div>
           <div class="pname">${p.name}</div>
           <div class="shop">${p.shop}</div>
           <div class="price">${formatRp(p.price)}</div>
           <div class="cta">
-            <button class="btn add">+ Titip</button>
-            <button class="btn quick">Beli Cepat</button>
+            <button class="btn add" data-id="${p.id}">+ Titip</button>
+            <button class="btn quick" data-id="${p.id}">Beli Cepat</button>
           </div>`;
         productsEl.appendChild(card);
-        const addBtn = card.querySelector('.add');
-        const quickBtn = card.querySelector('.quick');
-        addBtn.onclick=()=>addToCart(p);
-        quickBtn.onclick=()=>{addToCart(p);openWhatsApp();}
       });
+      document.querySelectorAll('.btn.add').forEach(b=>b.addEventListener('click',e=> addToCart(e.target.dataset.id)));
+      document.querySelectorAll('.btn.quick').forEach(b=>b.addEventListener('click',e=> quickOrder(e.target.dataset.id)));
     }
 
-    function addToCart(p){
-      if(!cart[p.name]) cart[p.name]={...p,qty:0};
-      cart[p.name].qty++;
-      updateCartBar();
+    function addToCart(id){
+      cart[id]=(cart[id]||0)+1;
+      updateCart();
     }
 
-    function updateCartBar(){
-      const items = Object.values(cart).reduce((a,b)=>a+b.qty,0);
-      if(items===0){document.getElementById('cartbar').style.display='none';return}
-      document.getElementById('cartbar').style.display='flex';
+    function quickOrder(id){
+      addToCart(id);
+      openWhatsApp();
+    }
+
+    function updateCart(){
+      const items=Object.values(cart).reduce((a,b)=>a+b,0);
+      if(items===0){cartbar.style.display='none';return;}
+      cartbar.style.display='flex';
       document.getElementById('cart-count').textContent = items+' item';
       document.getElementById('cart-total').textContent = formatRp(calcTotal());
     }
 
     function calcTotal(){
-      let subtotal=0;
-      Object.values(cart).forEach(p=>subtotal+=p.price*p.qty + p.fee*p.qty);
-      return subtotal;
+      let total=0;
+      for(const [id,qty] of Object.entries(cart)){
+        const card = document.querySelector(`[data-id="${id}"]`).closest('.card');
+        const price = +card.querySelector('.price').textContent.replace(/\D/g,'');
+        total += (price + feePerItem) * qty;
+      }
+      return total;
     }
 
     function openWhatsApp(){
-      const items = Object.values(cart);
-      if(items.length===0) return alert('Cart kosong');
+      if(Object.keys(cart).length===0) return alert('Keranjang kosong');
       let lines=[];
-      items.forEach(p=>{
-        lines.push(`${p.qty}x ${p.name} @${formatRp(p.price)} = ${formatRp(p.price*p.qty)}`);
-      });
+      for(const [id,qty] of Object.entries(cart)){
+        const card = document.querySelector(`[data-id="${id}"]`).closest('.card');
+        const name = card.querySelector('.pname').textContent;
+        const price = +card.querySelector('.price').textContent.replace(/\D/g,'');
+        lines.push(`${qty}x ${name} @${formatRp(price)} = ${formatRp(price*qty)}`);
+      }
       lines.push('Fee Jastip: '+formatRp(feePerItem)+' per item');
       lines.push('Total: '+formatRp(calcTotal()));
-      const msg=encodeURIComponent('Halo, saya mau order:\n'+lines.join('\n'));
-      window.open('https://wa.me/6289668081647?text='+msg,'_blank');
+      const msg = encodeURIComponent('Halo, saya mau order:\n'+lines.join('\n'));
+      window.open(`https://wa.me/6281234567890?text=${msg}`,'_blank');
     }
 
     document.getElementById('btn-order').addEventListener('click',openWhatsApp);
