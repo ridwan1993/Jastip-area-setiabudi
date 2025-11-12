@@ -7,12 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b;
+      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b; --danger:#d9534f;
       --fee:10000;
     }
     *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
     body{margin:0;background:var(--bg);color:#111}
-    header{background:linear-gradient(90deg,#fff 0%, #f0fff5 100%);padding:14px 16px;border-bottom:1px solid #e6efe6;display:flex;align-items:center;gap:12px}
+    header{background:linear-gradient(90deg,#fff 0%, #f0fff5 100%);padding:14px 16px;border-bottom:1px solid #e6efe6;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10}
     .logo{width:44px;height:44px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
     .title{font-size:15px;font-weight:600}
     .subtitle{font-size:12px;color:var(--muted)}
@@ -23,11 +23,10 @@
     .hero p{margin:6px 0 0;color:var(--muted);font-size:13px}
     .badge{background:var(--accent);color:#fff;padding:6px 8px;border-radius:8px;font-size:13px}
     .filters{display:flex;gap:8px;margin:12px 0}
-    .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #e8efe8;font-size:13px}
+    .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #e8efe8;font-size:13px;cursor:pointer}
     .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-    .card{background:var(--card);padding:10px;border-radius:12px;border:1px solid #eef6ee}
-    .img{height:100px;background:linear-gradient(135deg,#f3f9f3,#fff);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .img img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+    .card{background:var(--card);padding:10px;border-radius:12px;border:1px solid #eef6ee;position:relative}
+    .img{height:100px;background:linear-gradient(135deg,#f3f9f3,#fff);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#8aa98a;font-weight:700}
     .pname{font-size:13px;margin:8px 0 4px;font-weight:600}
     .shop{font-size:12px;color:var(--muted)}
     .price{font-weight:700;margin-top:6px}
@@ -35,10 +34,14 @@
     .btn{flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
     .btn.add{background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
     .btn.quick{background:var(--accent);color:#fff}
-    .cartbar{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#fff,#f8fff9);padding:10px;border-radius:12px;border:1px solid #e6efe6;display:none;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(16,40,12,0.08)}
-    .cart-info{flex:1}
-    .cart-summary{font-size:13px;color:var(--muted)}
-    .cart-total{font-weight:700;font-size:16px}
+    .carticon{position:fixed;bottom:16px;right:16px;background:var(--accent);color:#fff;border:none;width:54px;height:54px;border-radius:50%;font-size:22px;box-shadow:0 6px 16px rgba(47,143,74,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:50}
+    .cartcount{position:absolute;top:4px;right:6px;background:#ff5a5a;color:#fff;font-size:12px;padding:2px 6px;border-radius:10px;display:none}
+    .cartdrawer{position:fixed;bottom:-100%;left:0;right:0;background:#fff;border-top-left-radius:16px;border-top-right-radius:16px;box-shadow:0 -6px 20px rgba(0,0,0,0.2);padding:16px;transition:bottom 0.3s ease;z-index:100}
+    .cartdrawer.active{bottom:0}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;margin:8px 0;padding-bottom:6px;border-bottom:1px solid #eee}
+    .cart-item-name{font-size:13px}
+    .cart-controls button{background:#eef6ee;border:none;border-radius:6px;padding:4px 8px;margin:0 3px;cursor:pointer}
+    .checkout{background:var(--accent);color:#fff;border:0;padding:10px;width:100%;border-radius:10px;font-weight:600;margin-top:12px}
     footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
     @media(min-width:640px){main{max-width:720px;margin:0 auto} .grid{grid-template-columns:repeat(3,1fr)}}
   </style>
@@ -61,126 +64,154 @@
       <div class="badge">Open • Hari ini</div>
     </section>
 
-    <section class="grid" id="products">Memuat data...</section>
+    <div class="filters" style="margin-top:12px">
+      <div class="chip" onclick="filterCategory('')">Semua</div>
+      <div class="chip" onclick="filterCategory('Skincare')">Skincare</div>
+      <div class="chip" onclick="filterCategory('Bodycare')">Bodycare</div>
+      <div class="chip" onclick="filterCategory('Promo')">Promo</div>
+    </div>
+
+    <section class="grid" id="products"></section>
   </main>
 
-  <div class="cartbar" id="cartbar">
-    <div class="cart-info">
-      <div class="cart-summary" id="cart-count">0 item</div>
-      <div class="cart-total" id="cart-total">Rp0</div>
-    </div>
-    <button class="btn quick" id="btn-order">Order via WhatsApp</button>
+  <button class="carticon" onclick="toggleCart()">
+    🛒<span id="cartcount" class="cartcount">0</span>
+  </button>
+
+  <div id="cartdrawer" class="cartdrawer">
+    <h3>🛍️ Pesanan Kamu</h3>
+    <div id="cartitems"></div>
+    <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
+    <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
   </div>
 
   <footer>
-    <div>Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="https://wa.me/6289668081647" id="waLink">Chat WhatsApp</a></div>
+    <div>Jastip Setiabudi • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
+    <div style="margin-top:6px">Contact: <a href="https://wa.me/6281234567890" id="waLink">Chat WhatsApp</a></div>
   </footer>
 
   <script>
-	const SHEET_URL = "https://docs.google.com/spreadsheets/d/1kc3sz6SwfZuxVQartjwif3npX85CiaMRcr_tPWRFD80/export?format=csv"; // Ganti dengan URL CSV-mu
-	const feePerItem = 10000;
-	const productsEl = document.getElementById('products');
-	const cartbar = document.getElementById('cartbar');
-	const cart = {};
-	let ALL_PRODUCTS = [];
+    const PRODUCTS = [
+      {id:1,name:'Tea Tree Cleanser 250ml',shop:'The Body Shop',price:139000,category:'Skincare'},
+      {id:2,name:'Scarlett Brightly Serum 30ml',shop:'Scarlett',price:75000,category:'Skincare'},
+      {id:3,name:'Garnier Micellar 125ml',shop:'Guardian',price:40000,category:'Skincare',promo:true},
+      {id:4,name:'Emina Face Wash',shop:'Emina',price:25000,category:'Skincare'},
+      {id:5,name:'Nivea Body Lotion 200ml',shop:'Watsons',price:58000,category:'Bodycare'},
+      {id:6,name:'Wardah Lightening',shop:'Wardah',price:65000,category:'Bodycare'}
+    ];
+    const feePerItem = 10000;
+    const cart = JSON.parse(localStorage.getItem("jastip_cart")||"{}");
+    let currentCategory='';
 
-	function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
+    const productsEl = document.getElementById('products');
+    const cartDrawer = document.getElementById('cartdrawer');
+    const cartCount = document.getElementById('cartcount');
 
-	fetch(SHEET_URL)
-	  .then(r=>r.text())
-	  .then(csv=>{
-		const rows = csv.split("\n").slice(1);
-		ALL_PRODUCTS = rows.map(r=>{
-		  const [name,shop,price,img,fee,category,promo] = r.split(",");
-		  return {id:name.trim(), name, shop, price:+price, img, fee:+fee||feePerItem, category:(category||'Lainnya').trim(), promo:(promo||'Tidak').trim()};
-		});
-		renderFilterButtons();
-		renderProducts(ALL_PRODUCTS);
-	  });
+    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
 
-	function renderFilterButtons(){
-	  const cats = [...new Set(ALL_PRODUCTS.map(p=>p.category))];
-	  const filterBar = document.createElement('div');
-	  filterBar.className='filters';
-	  filterBar.innerHTML = `<div class="chip" onclick="filterProducts('all')">Semua</div>` +
-		cats.map(c=>`<div class="chip" onclick="filterProducts('${c}')">${c}</div>`).join('') +
-		`<div class="chip" onclick="filterProducts('promo')">Promo</div>`;
-	  document.querySelector('.hero').after(filterBar);
-	}
+    function filterCategory(cat){currentCategory=cat;renderProducts();}
 
-	function filterProducts(cat){
-	  if(cat==='all') renderProducts(ALL_PRODUCTS);
-	  else if(cat==='promo') renderProducts(ALL_PRODUCTS.filter(p=>p.promo.toLowerCase()==='ya'));
-	  else renderProducts(ALL_PRODUCTS.filter(p=>p.category===cat));
-	}
+    function renderProducts(){
+      productsEl.innerHTML='';
+      PRODUCTS.filter(p=>!currentCategory||p.category===currentCategory||(currentCategory==='Promo'&&p.promo))
+      .forEach(p=>{
+        const card=document.createElement('div');
+        card.className='card';
+        card.innerHTML=`
+          <div class="img">${p.shop.split(' ')[0]}</div>
+          <div class="pname">${p.name}</div>
+          <div class="shop">${p.shop}</div>
+          <div class="price">${formatRp(p.price)}</div>
+          <div class="cta">
+            <button class="btn add" onclick="addToCart(${p.id})">+ Titip</button>
+            <button class="btn quick" onclick="quickOrder(${p.id})">Beli Cepat</button>
+          </div>`;
+        productsEl.appendChild(card);
+      });
+      updateCartCount();
+    }
 
-	function renderProducts(PRODUCTS){
-	  productsEl.innerHTML='';
-	  PRODUCTS.forEach(p=>{
-		const card = document.createElement('div');
-		card.className='card';
-		card.innerHTML=`
-		  <div class="img">${p.img ? `<img src='${p.img}'>` : p.shop.split(' ')[0]}</div>
-		  <div class="pname">${p.name}</div>
-		  <div class="shop">${p.shop}</div>
-		  <div class="price">${formatRp(p.price)}</div>
-		  ${p.promo.toLowerCase()==='ya' ? `<div style='color:#d9534f;font-size:12px;margin-top:2px;font-weight:600'>Promo!</div>`:''}
-		  <div class="cta">
-			<button class="btn add" data-id="${p.id}">+ Titip</button>
-			<button class="btn quick" data-id="${p.id}">Beli Cepat</button>
-		  </div>`;
-		productsEl.appendChild(card);
-	  });
-	  document.querySelectorAll('.btn.add').forEach(b=>b.addEventListener('click',e=> addToCart(e.target.dataset.id)));
-	  document.querySelectorAll('.btn.quick').forEach(b=>b.addEventListener('click',e=> quickOrder(e.target.dataset.id)));
-	}
+    function addToCart(id){
+      const p=PRODUCTS.find(x=>x.id==id);
+      if(!p)return;
+      if(!cart[id])cart[id]={...p,qty:0};
+      cart[id].qty++;
+      saveCart();
+      updateCartCount();
+    }
 
-	function addToCart(id){
-	  cart[id]=(cart[id]||0)+1;
-	  updateCart();
-	}
+    function quickOrder(id){
+      addToCart(id);
+      openCart();
+    }
 
-	function quickOrder(id){
-	  addToCart(id);
-	  openWhatsApp();
-	}
+    function saveCart(){
+      localStorage.setItem("jastip_cart",JSON.stringify(cart));
+    }
 
-	function updateCart(){
-	  const items=Object.values(cart).reduce((a,b)=>a+b,0);
-	  if(items===0){cartbar.style.display='none';return;}
-	  cartbar.style.display='flex';
-	  document.getElementById('cart-count').textContent = items+' item';
-	  document.getElementById('cart-total').textContent = formatRp(calcTotal());
-	}
+    function updateCartCount(){
+      const totalQty=Object.values(cart).reduce((a,b)=>a+b.qty,0);
+      cartCount.textContent=totalQty;
+      cartCount.style.display=totalQty>0?'inline-block':'none';
+    }
 
-	function calcTotal(){
-	  let total=0;
-	  for(const [id,qty] of Object.entries(cart)){
-		const card = document.querySelector(`[data-id="${id}"]`).closest('.card');
-		const price = +card.querySelector('.price').textContent.replace(/\D/g,'');
-		total += (price + feePerItem) * qty;
-	  }
-	  return total;
-	}
+    function toggleCart(){
+      cartDrawer.classList.toggle('active');
+      renderCart();
+    }
 
-	function openWhatsApp(){
-	  if(Object.keys(cart).length===0) return alert('Keranjang kosong');
-	  let lines=[];
-	  for(const [id,qty] of Object.entries(cart)){
-		const card = document.querySelector(`[data-id="${id}"]`).closest('.card');
-		const name = card.querySelector('.pname').textContent;
-		const price = +card.querySelector('.price').textContent.replace(/\D/g,'');
-		lines.push(`${qty}x ${name} @${formatRp(price)} = ${formatRp(price*qty)}`);
-	  }
-	  lines.push('Fee Jastip: '+formatRp(feePerItem)+' per item');
-	  lines.push('Total: '+formatRp(calcTotal()));
-	  const msg = encodeURIComponent('Halo, saya mau order:\n'+lines.join('\n'));
-	  window.open(`https://wa.me/6281234567890?text=${msg}`,'_blank');
-	}
+    function openCart(){cartDrawer.classList.add('active');renderCart();}
+    function renderCart(){
+      const list=document.getElementById('cartitems');
+      const totalDiv=document.getElementById('carttotal');
+      list.innerHTML='';
+      let total=0;
+      const items=Object.values(cart);
+      if(items.length===0){list.innerHTML='<p>Keranjang kosong.</p>';totalDiv.textContent='';return;}
+      items.forEach(i=>{
+        const subtotal=(i.price+feePerItem)*i.qty;
+        total+=subtotal;
+        list.innerHTML+=`
+          <div class="cart-item">
+            <div class="cart-item-name">${i.name}<br><small>${formatRp(i.price)} + Fee ${formatRp(feePerItem)}</small></div>
+            <div class="cart-controls">
+              <button onclick="changeQty(${i.id},-1)">-</button>
+              <span>${i.qty}</span>
+              <button onclick="changeQty(${i.id},1)">+</button>
+              <button onclick="removeItem(${i.id})">❌</button>
+            </div>
+          </div>`;
+      });
+      totalDiv.textContent='Total: '+formatRp(total);
+    }
 
-	document.getElementById('btn-order').addEventListener('click',openWhatsApp);
-	</script>
+    function changeQty(id,delta){
+      if(!cart[id])return;
+      cart[id].qty+=delta;
+      if(cart[id].qty<=0)delete cart[id];
+      saveCart();renderCart();updateCartCount();
+    }
 
+    function removeItem(id){
+      delete cart[id];
+      saveCart();renderCart();updateCartCount();
+    }
+
+    function checkout(){
+      const items=Object.values(cart);
+      if(items.length===0)return alert('Keranjang kosong!');
+      let msg='Halo, saya mau titip:\n';
+      let total=0;
+      items.forEach(i=>{
+        const subtotal=(i.price+feePerItem)*i.qty;
+        total+=subtotal;
+        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price+feePerItem)})\n`;
+      });
+      msg+=`\nTotal: ${formatRp(total)}\n`;
+      window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`,'_blank');
+    }
+
+    renderProducts();
+  </script>
 </body>
 </html>
