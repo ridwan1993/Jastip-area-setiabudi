@@ -1,222 +1,159 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jastip Setiabudi → Cilejit</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f7f9f8; --card:#ffffff; --accent:#2f8f4a; --muted:#6b6b6b; --danger:#d9534f; --fee:10000;
-    }
-    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{margin:0;background:var(--bg);color:#111}
-    header{background:linear-gradient(90deg,#fff 0%, #f0fff5 100%);
-      padding:14px 16px;border-bottom:1px solid #e6efe6;display:flex;align-items:center;justify-content:space-between}
-    .logo-area{display:flex;align-items:center;gap:12px}
-    .logo{width:44px;height:44px;border-radius:8px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
-    .title{font-size:15px;font-weight:600}
-    .subtitle{font-size:12px;color:var(--muted)}
-    .cart-btn{position:relative;background:none;border:none;cursor:pointer;font-size:22px}
-    .cart-count{position:absolute;top:-5px;right:-8px;background:var(--accent);color:#fff;border-radius:999px;
-      padding:2px 6px;font-size:11px;font-weight:600}
-
-    main{padding:14px}
-    .hero{background:var(--card);padding:12px;border-radius:12px;
-      box-shadow:0 6px 18px rgba(47,143,74,0.06);display:flex;gap:12px;align-items:center}
-    .hero .info{flex:1}
-    .hero h1{margin:0;font-size:16px}
-    .hero p{margin:6px 0 0;color:var(--muted);font-size:13px}
-    .badge{background:var(--accent);color:#fff;padding:6px 8px;border-radius:8px;font-size:13px}
-    .filters{display:flex;gap:8px;margin:12px 0}
-    .chip{background:#fff;padding:8px 12px;border-radius:999px;border:1px solid #e8efe8;font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
-    .card{background:var(--card);padding:10px;border-radius:12px;border:1px solid #eef6ee}
-    .img{height:100px;background:linear-gradient(135deg,#f3f9f3,#fff);border-radius:8px;display:flex;
-      align-items:center;justify-content:center;color:#8aa98a;font-weight:700}
-    .pname{font-size:13px;margin:8px 0 4px;font-weight:600}
-    .shop{font-size:12px;color:var(--muted)}
-    .price{font-weight:700;margin-top:6px}
-    .cta{display:flex;gap:8px;margin-top:8px}
-    .btn{flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
-    .btn.add{background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
-    .btn.quick{background:var(--accent);color:#fff}
-
-    /* Cart popup */
-    .cart-popup{
-      position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;
-      box-shadow:0 -10px 30px rgba(0,0,0,0.1);padding:14px;display:none;flex-direction:column;max-height:70vh;overflow:auto;
-      animation:slideUp .3s ease-out;
-    }
-    @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-    .cart-item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:6px 0}
-    .cart-item-name{flex:1;font-size:13px}
-    .qty-controls{display:flex;align-items:center;gap:6px}
-    .qty-btn{background:#e8f5e9;border:none;border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--accent)}
-    .cart-footer{margin-top:12px;text-align:right}
-    .cart-total{font-weight:700;margin-bottom:8px}
-    .btn-whatsapp{background:var(--accent);color:#fff;padding:10px 14px;border-radius:8px;border:none;font-weight:600;width:100%}
-    .close-popup{background:none;border:none;font-size:18px;float:right;cursor:pointer;color:var(--muted)}
-
-    footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
-    @media(min-width:640px){main{max-width:720px;margin:0 auto} .grid{grid-template-columns:repeat(3,1fr)}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titip Skincare</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f9f8;--card:#fff;--accent:#2f8f4a;--muted:#6b6b6b;--fee:10000;
+}
+*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body{margin:0;background:var(--bg);color:#111}
+header{padding:16px;text-align:center;background:var(--card);position:sticky;top:0;z-index:10;border-bottom:1px solid #eee}
+h1{margin:0;font-size:18px}
+.badge{background:#e6f4ea;color:var(--accent);font-weight:600;font-size:13px;padding:3px 10px;border-radius:20px;display:inline-block;margin-top:6px}
+.filters{display:flex;gap:8px;padding:10px 16px;overflow-x:auto}
+.chip{background:#fff;border:1px solid #dcdcdc;padding:6px 14px;border-radius:20px;font-size:14px;cursor:pointer;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;padding:16px}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:0 2px 5px rgba(0,0,0,0.05);display:flex;flex-direction:column;justify-content:space-between}
+.card img{width:100%;border-radius:10px;height:130px;object-fit:cover}
+.card h3{margin:8px 0 4px;font-size:15px}
+.card p{margin:0;font-size:13px;color:var(--muted)}
+.price{font-weight:700;margin-top:4px}
+.btnrow{display:flex;gap:6px;margin-top:8px}
+.btn{flex:1;padding:8px 10px;border-radius:8px;border:0;font-weight:600;cursor:pointer}
+.btn.add{background:#fff;border:1px solid #cfe9c9;color:var(--accent)}
+.btn.quick{background:var(--accent);color:#fff}
+.cartbar{position:fixed;left:12px;right:12px;bottom:12px;background:linear-gradient(90deg,#fff,#f8fff9);padding:10px;border-radius:12px;border:1px solid #e6efe6;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(16,40,12,0.08)}
+.cart-info{flex:1}
+.cart-summary{font-size:13px;color:var(--muted)}
+.cart-total{font-weight:700;font-size:16px}
+.detail-order{
+  position:fixed;bottom:0;left:0;right:0;background:#fff;
+  border-radius:16px 16px 0 0;box-shadow:0 -5px 20px rgba(0,0,0,0.15);
+  transform:translateY(100%);transition:transform .3s ease;
+  max-height:80vh;overflow-y:auto;padding:16px;
+}
+.detail-order.active{transform:translateY(0)}
+.detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.detail-header h2{margin:0;font-size:16px;}
+.detail-close{background:none;border:none;font-size:20px;cursor:pointer;}
+.order-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee}
+.order-name{font-size:14px}
+.order-qty{display:flex;align-items:center;gap:6px}
+.qty-btn{width:24px;height:24px;text-align:center;line-height:24px;background:#f0f0f0;border-radius:50%;cursor:pointer}
+</style>
 </head>
 <body>
   <header>
-    <div class="logo-area">
-      <div class="logo">JS</div>
-      <div>
-        <div class="title">💼 JASTIP SETIABUDI → CILEJIT</div>
-        <div class="subtitle">Skincare & Bodycare — Fee Rp10.000/item</div>
-      </div>
-    </div>
-    <button class="cart-btn" id="btnCart">🛒<span class="cart-count" id="cartCount" style="display:none">0</span></button>
+    <h1>Butuh skincare dari Setiabudi hari ini?</h1>
+    <div class="badge">Open • Hari ini</div>
   </header>
 
-  <main>
-    <section class="hero">
-      <div class="info">
-        <h1>Butuh skincare dari Setiabudi hari ini?</h1>
-        <p>Order sebelum <strong>16:00</strong>, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.</p>
-      </div>
-      <div class="badge">Open • Hari ini</div>
-    </section>
-
-    <div class="filters">
-      <div class="chip">Skincare</div>
-      <div class="chip">Bodycare</div>
-      <div class="chip">Promo</div>
-    </div>
-
-    <section class="grid" id="products">Memuat data...</section>
-  </main>
-
-  <div class="cart-popup" id="cartPopup">
-    <button class="close-popup" id="closePopup">✕</button>
-    <h3>🛍️ Detail Titipan</h3>
-    <div id="cartItems"></div>
-    <div class="cart-footer">
-      <div class="cart-total" id="cartTotal">Total: Rp0</div>
-      <button class="btn-whatsapp" id="btnOrderWA">Order via WhatsApp</button>
-    </div>
+  <div class="filters">
+    <div class="chip">Semua</div>
+    <div class="chip">Skincare</div>
+    <div class="chip">Bodycare</div>
+    <div class="chip">Promo</div>
   </div>
 
-  <footer>
-    <div>Jastip Setiabudi • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="https://wa.me/6281234567890" id="waLink">Chat WhatsApp</a></div>
-  </footer>
+  <section class="grid" id="products"></section>
 
-  <script>
-    const PRODUCTS = [
-      {id:1,name:'Tea Tree Cleanser 250ml',shop:'The Body Shop',price:139000,category:'Skincare',promo:'Tidak'},
-      {id:2,name:'Scarlett Brightly Serum 30ml',shop:'Scarlett',price:75000,category:'Skincare',promo:'Ya'},
-      {id:3,name:'Garnier Micellar 125ml',shop:'Guardian',price:40000,category:'Skincare',promo:'Tidak'},
-      {id:4,name:'Emina Face Wash',shop:'Emina',price:25000,category:'Skincare',promo:'Ya'},
-      {id:5,name:'Nivea Body Lotion 200ml',shop:'Watsons',price:58000,category:'Bodycare',promo:'Tidak'},
-      {id:6,name:'Wardah Lightening',shop:'Wardah',price:65000,category:'Skincare',promo:'Tidak'}
-    ];
+  <div class="cartbar" id="cartbar" style="display:none">
+    <div class="cart-info">
+      <div class="cart-summary" id="cart-count">0 item</div>
+      <div class="cart-total" id="cart-total">Rp0</div>
+    </div>
+    <button class="btn quick" id="detailOrderBtn">Lihat Order</button>
+  </div>
 
-    const feePerItem = 10000;
-    const cart = {};
+  <div class="detail-order" id="detailOrder">
+    <div class="detail-header">
+      <h2>Detail Order</h2>
+      <button class="detail-close" id="closeDetail">✖</button>
+    </div>
+    <div id="orderList"></div>
+  </div>
 
-    const productsEl = document.getElementById('products');
-    const cartCount = document.getElementById('cartCount');
-    const cartPopup = document.getElementById('cartPopup');
-    const cartItemsEl = document.getElementById('cartItems');
-    const cartTotalEl = document.getElementById('cartTotal');
+<script>
+const products=[
+  {id:1,nama:"Facial Wash",harga:35000,img:"https://i.imgur.com/5bXjYhM.jpg",kategori:"Skincare",promo:"Ya"},
+  {id:2,nama:"Body Lotion",harga:42000,img:"https://i.imgur.com/hYV4Xms.jpg",kategori:"Bodycare",promo:"Tidak"},
+  {id:3,nama:"Toner",harga:27000,img:"https://i.imgur.com/zZ9vVnO.jpg",kategori:"Skincare",promo:"Ya"},
+  {id:4,nama:"Body Scrub",harga:39000,img:"https://i.imgur.com/yZfV5Bo.jpg",kategori:"Bodycare",promo:"Tidak"}
+];
 
-    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+const productsEl=document.getElementById("products");
+const cartbar=document.getElementById("cartbar");
+const cartCount=document.getElementById("cart-count");
+const cartTotal=document.getElementById("cart-total");
+const detailOrder=document.getElementById("detailOrder");
+const orderList=document.getElementById("orderList");
+let cart={};
 
-    function renderProducts(){
-      productsEl.innerHTML='';
-      PRODUCTS.forEach(p=>{
-        const card=document.createElement('div');card.className='card';
-        card.innerHTML=`
-          <div class="img">${p.shop.split(' ')[0]}</div>
-          <div class="pname">${p.name}</div>
-          <div class="shop">${p.shop}</div>
-          <div class="price">${formatRp(p.price)}</div>
-          <div class="cta">
-            <button class="btn add" data-id="${p.id}">+ Titip</button>
-            <button class="btn quick" data-id="${p.id}">Beli Cepat</button>
-          </div>`;
-        productsEl.appendChild(card);
-      });
-      document.querySelectorAll('.btn.add').forEach(b=>b.onclick=e=>addToCart(+e.target.dataset.id));
-      document.querySelectorAll('.btn.quick').forEach(b=>b.onclick=e=>quickOrder(+e.target.dataset.id));
-    }
+function renderProducts(list){
+  productsEl.innerHTML="";
+  list.forEach(p=>{
+    const el=document.createElement("div");
+    el.className="card";
+    el.innerHTML=`
+      <img src="${p.img}">
+      <h3>${p.nama}</h3>
+      <p>${p.kategori} ${p.promo=="Ya"?"• Promo":""}</p>
+      <div class="price">Rp${p.harga.toLocaleString()}</div>
+      <div class="btnrow">
+        <button class="btn add" onclick="addToCart(${p.id})">Titip</button>
+        <button class="btn quick">Beli Cepat</button>
+      </div>`;
+    productsEl.appendChild(el);
+  });
+}
 
-    function addToCart(id){
-      if(!cart[id]) cart[id]=0;
-      cart[id]++;
-      updateCartCounter();
-    }
+function addToCart(id){
+  if(!cart[id])cart[id]={...products.find(p=>p.id==id),qty:0};
+  cart[id].qty++;
+  updateCart();
+}
 
-    function quickOrder(id){
-      addToCart(id);
-      openPopup();
-    }
+function updateCart(){
+  const items=Object.values(cart);
+  const totalQty=items.reduce((a,b)=>a+b.qty,0);
+  const totalPrice=items.reduce((a,b)=>a+b.harga*b.qty,0);
+  if(totalQty>0){cartbar.style.display="flex"}else{cartbar.style.display="none"}
+  cartCount.textContent=`${totalQty} item`;
+  cartTotal.textContent=`Rp${totalPrice.toLocaleString()}`;
+}
 
-    function updateCartCounter(){
-      const count=Object.values(cart).reduce((a,b)=>a+b,0);
-      if(count>0){cartCount.style.display='inline';cartCount.textContent=count;}
-      else cartCount.style.display='none';
-    }
+function showDetail(){
+  detailOrder.classList.add("active");
+  orderList.innerHTML="";
+  Object.values(cart).forEach(item=>{
+    const div=document.createElement("div");
+    div.className="order-item";
+    div.innerHTML=`
+      <div class="order-name">${item.nama}</div>
+      <div class="order-qty">
+        <div class="qty-btn" onclick="changeQty(${item.id},-1)">−</div>
+        <div>${item.qty}</div>
+        <div class="qty-btn" onclick="changeQty(${item.id},1)">+</div>
+      </div>`;
+    orderList.appendChild(div);
+  });
+}
 
-    function openPopup(){
-      renderCart();
-      cartPopup.style.display='flex';
-    }
+function changeQty(id,delta){
+  cart[id].qty+=delta;
+  if(cart[id].qty<=0) delete cart[id];
+  updateCart();
+  showDetail();
+}
 
-    function closePopup(){
-      cartPopup.style.display='none';
-    }
+document.getElementById("detailOrderBtn").onclick=showDetail;
+document.getElementById("closeDetail").onclick=()=>detailOrder.classList.remove("active");
 
-    function renderCart(){
-      cartItemsEl.innerHTML='';
-      let total=0;
-      Object.entries(cart).forEach(([id,q])=>{
-        const p=PRODUCTS.find(x=>x.id==id);
-        const sub=(p.price+feePerItem)*q;
-        total+=sub;
-        const div=document.createElement('div');div.className='cart-item';
-        div.innerHTML=`
-          <div class="cart-item-name">${p.name}<br><small>${p.shop}</small></div>
-          <div class="qty-controls">
-            <button class="qty-btn" onclick="decreaseQty(${id})">−</button>
-            <span>${q}</span>
-            <button class="qty-btn" onclick="increaseQty(${id})">+</button>
-          </div>
-          <div>${formatRp(sub)}</div>`;
-        cartItemsEl.appendChild(div);
-      });
-      cartTotalEl.textContent='Total: '+formatRp(total);
-    }
-
-    function increaseQty(id){addToCart(id);renderCart();}
-    function decreaseQty(id){
-      if(cart[id]){cart[id]--;if(cart[id]<=0) delete cart[id];}
-      updateCartCounter();renderCart();
-    }
-
-    function sendWhatsApp(){
-      if(Object.keys(cart).length===0) return alert('Cart kosong');
-      let lines=[];
-      Object.entries(cart).forEach(([id,q])=>{
-        const p=PRODUCTS.find(x=>x.id==id);
-        lines.push(`${q}x ${p.name} (${p.shop}) @${formatRp(p.price)} + Fee ${formatRp(feePerItem)}`);
-      });
-      const totalText='Total: '+cartTotalEl.textContent.split(': ')[1];
-      const message=encodeURIComponent('Halo, saya mau titip:\n'+lines.join('\n')+'\n'+totalText);
-      window.open('https://wa.me/6281234567890?text='+message,'_blank');
-    }
-
-    document.getElementById('btnCart').onclick=openPopup;
-    document.getElementById('closePopup').onclick=closePopup;
-    document.getElementById('btnOrderWA').onclick=sendWhatsApp;
-
-    renderProducts();
-  </script>
+renderProducts(products);
+</script>
 </body>
 </html>
