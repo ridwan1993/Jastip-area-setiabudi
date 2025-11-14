@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jastip Setiabudi → Cilejit</title>
+  <title>Toko Online Instan</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -309,12 +309,14 @@
     const wa = document.getElementById("inputWA").value;
     const sheet = document.getElementById("inputSheet").value;
 
-    if(!nama || !desk || !wa || !sheet){
-      alert("Semua field wajib diisi!");
-      return;
-    }
+    //if(!nama || !desk || !wa || !sheet){
+    //  alert("Semua field wajib diisi!");
+    //  return;
+    //}
 
     const data = {nama, desk, wa, sheet};
+
+	console.log(data);
 
     // Simpan
     localStorage.setItem("setup_usaha", JSON.stringify(data));
