@@ -282,10 +282,7 @@ main { padding: 14px; }
 @media (max-height: 600px) {
   .modal { max-height: 92vh; overflow-y: auto; }
 }
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 12px;
+.modal-close { 
   background: rgba(0,0,0,0.06);
   border: none;
   font-size: 22px;
@@ -355,10 +352,14 @@ main { padding: 14px; }
   <!-- SETUP / PROFILES MODAL -->
   <div id="setupModal" class="modal-backdrop" style="display:none;overflow:auto;">
     <div class="modal" role="dialog" aria-modal="true">
-      <button class="modal-close" onclick="closeSetupModal()">×</button>
-      
+      <div id="headermodal" style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin: 8px 0;">
       <h3>Pengaturan Toko / Profil</h3>
-
+      <button class="modal-close" onclick="closeSetupModal()">×</button>      
+      </div>
       <div style="display:none; gap:8px; margin-bottom:12px; align-items:center;">
         <div style="flex:1;max-width: 74%;">
           <div class="small">Pilih profil</div>
@@ -857,6 +858,7 @@ main { padding: 14px; }
   </script>
 </body>
 </html>
+
 
 
 
