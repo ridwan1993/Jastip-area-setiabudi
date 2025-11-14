@@ -260,8 +260,9 @@
 		/* MODE TABLET / HP LEBAR */
 		@media (max-width: 768px) {
 		  .modal {
-			padding: 18px;
+			padding: 17px;
 			width: 90%;
+			overflow: hidden;
 		  }
 		  .row {
 			gap: 6px;
@@ -328,7 +329,7 @@
       <h3>Pengaturan Toko / Profil</h3>
 
       <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
-        <div style="flex:1">
+        <div style="flex:1;max-width: 74%;">
           <div class="small">Pilih profil</div>
           <div class="profiles-list" id="profilesList"></div>
         </div>
@@ -823,3 +824,4 @@
   </script>
 </body>
 </html>
+
