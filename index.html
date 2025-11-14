@@ -1,758 +1,204 @@
-<!doctype html>
+<!-- Full final code with tagline input integrated -->
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Jastip Setiabudi → Cilejit</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f7f9f8;
-      --card: #ffffff;
-      --accent: #2f8f4a;
-      --muted: #6b6b6b;
-      --danger: #d9534f;
-    }
-    * { box-sizing: border-box; font-family: Inter, system-ui, sans-serif; }
-    body { margin: 0; background: var(--bg); color: #111; }
-
-    header {
-      background: linear-gradient(90deg,#fff 0%, #f0fff5 100%);
-      padding: 14px 16px;
-      border-bottom: 1px solid #e6efe6;
-      display: flex; align-items: center; gap: 12px;
-      position: sticky; top: 0; z-index: 10;
-    }
-    .logo {
-      width: 44px; height: 44px; border-radius: 8px;
-      background: var(--accent); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700;
-      overflow: hidden;
-    }
-    .logo img { width:100%; height:100%; object-fit:cover; display:block; }
-    .title { font-size: 15px; font-weight: 600; }
-    .subtitle { font-size: 12px; color: var(--muted); }
-
-    main { padding: 14px; }
-
-    .hero {
-      background: var(--card); padding: 12px; border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(47,143,74,0.06);
-      display: flex; gap: 12px; align-items: center;
-    }
-    .hero .info { flex: 1; }
-    .hero h1 { margin: 0; font-size: 16px; }
-    .hero p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
-    .badge {
-      background: var(--accent); color: #fff; padding: 6px 8px;
-      border-radius: 8px; font-size: 13px;
-    }
-
-    /* FILTER CHIPS */
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 14px 0;
-      justify-content: flex-start;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #333;
-      background: #ffffff;
-      border: 1px solid #e0e6e0;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      user-select: none;
-    }
-    .chip:hover {
-      background: #eaf8ed;
-      border-color: #bde5c2;
-      color: #1e7b38;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-    }
-    .chip.active {
-      background: #2f8f4a;
-      color: #fff;
-      border-color: #2f8f4a;
-      box-shadow: 0 3px 10px rgba(47,143,74,0.25);
-    }
-    .chip:active { transform: scale(0.97); }
-
-    @media (max-width: 480px) {
-      .chip {
-        font-size: 12px;
-        padding: 6px 14px;
-      }
-    }
-
-    /* PRODUCT GRID */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .card {
-      background: var(--card);
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid #eef6ee;
-      position: relative;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-    .img {
-      height: 100px;
-      background: linear-gradient(135deg,#f3f9f3,#fff);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
-    .img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .pname { font-size: 13px; margin: 8px 0 4px; font-weight: 600; }
-    .shop { font-size: 12px; color: var(--muted); }
-    .price { font-weight: 700; margin-top: 6px; font-size: 13px; margin-bottom:6px; }
-
-    .btn {
-      width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-    .btn.add { background: #fff; border: 1px solid #cfe9c9; color: var(--accent); }
-    .btn.add:hover { background: #eaf7eb; }
-    .btn.quick { background: var(--accent); color: #fff; margin-top: 6px; }
-    .btn.quick:hover { background: #24743a; }
-
-    .carticon {
-      position: fixed; bottom: 16px; right: 16px;
-      background: var(--accent); color: #fff;
-      border: none; width: 54px; height: 54px;
-      border-radius: 50%;
-      font-size: 22px;
-      box-shadow: 0 6px 16px rgba(47,143,74,0.3);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; z-index: 50;
-    }
-    .cartcount {
-      position: absolute; top: 4px; right: 6px;
-      background: #ff5a5a; color: #fff;
-      font-size: 12px; padding: 2px 6px; border-radius: 10px;
-      display: none;
-    }
-
-    .cartdrawer {
-      position: fixed; bottom: -100%; left: 0; right: 0;
-      background: #fff;
-      border-top-left-radius: 16px; border-top-right-radius: 16px;
-      box-shadow: 0 -6px 20px rgba(0,0,0,0.2);
-      padding: 16px;
-      transition: bottom 0.3s ease;
-      z-index: 100;
-    }
-    .cartdrawer.active { bottom: 0; }
-
-    .cart-item { display: flex; justify-content: space-between; align-items: center;
-      margin: 8px 0; padding-bottom: 6px; border-bottom: 1px solid #eee; }
-    .cart-item-name { font-size: 13px; }
-    .cart-controls button {
-      background: #eef6ee; border: none; border-radius: 6px;
-      padding: 4px 8px; margin: 0 3px; cursor: pointer;
-    }
-
-    .checkout {
-      background: var(--accent); color: #fff; border: 0;
-      padding: 10px; width: 100%; border-radius: 10px;
-      font-weight: 600; margin-top: 12px;
-    }
-
-    footer {
-      padding: 18px; text-align: center; color: var(--muted); font-size: 13px;
-    }
-
-    /* Simple modal styles */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 9999;
-    }
-    .modal {
-      background: #fff; border-radius: 12px; padding: 16px;
-      width: 96%; max-width: 520px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    }
-    .modal h3 { margin-top:0; }
-    .row { display:flex; gap:8px; }
-    .col { flex:1; }
-    .field { margin-bottom:10px; }
-    .small { font-size:12px; color:var(--muted); }
-    .btn-ghost { background:transparent; border:1px solid #ddd; padding:8px 10px; border-radius:8px; cursor:pointer; }
-    .btn-primary { background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
-    .danger { background:var(--danger); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
-
-    .profiles-list { max-height:180px; overflow:auto; margin-bottom:8px; border:1px solid #eee; padding:8px; border-radius:8px; }
-    .profile-item { display:flex; align-items:center; gap:8px; padding:6px; border-radius:8px; cursor:pointer; }
-    .profile-item:hover { background:#f7f7f7; }
-    .profile-name { font-weight:600; }
-    .profile-meta { font-size:12px; color:var(--muted); }
-    .logo-preview { width:36px; height:36px; border-radius:6px; overflow:hidden; background:#f0f0f0; display:flex; align-items:center; justify-content:center; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dynamic Storefront</title>
+<style>
+:root {
+  --accent: #4f46e5;
+  --bg: #f3f4f6;
+  --card: #ffffff;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: #111;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+  background: var(--card);
+  border-bottom: 1px solid #e5e7eb;
+}
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+.title {
+  font-size: 20px;
+  font-weight: bold;
+}
+.info {
+  padding: 20px;
+}
+.info h1 {
+  margin-top: 0;
+}
+button.settings-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#settingsModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#settingsBox {
+  background: #fff;
+  width: 90%;
+  max-width: 480px;
+  padding: 20px;
+  border-radius: 12px;
+}
+#settingsBox label {
+  display: block;
+  margin-top: 14px;
+  font-weight: bold;
+}
+#settingsBox input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+#settingsBox button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo" id="logoEl">JS</div>
-    <div>
-      <div class="title">💼 Toko Online Instaan</div>
-      <div class="subtitle" id="subtitleEl">Skincare & Bodycare — Fee Rp10.000/item</div>
-    </div>
-    <div style="margin-left:auto">
-      <button class="btn-ghost" onclick="openSetupModal()">Pengaturan • Toko</button>
-    </div>
-  </header>
+<header>
+  <div class="logo">JS</div>
+  <div class="title">Nama Usaha</div>
+</header>
 
-  <main>
-    <section class="hero">
-      <div class="info">
-        <h1>Butuh skincare dari Setiabudi hari ini?</h1>
-        <p id="heroDesc">Order sebelum <strong>16:00</strong>, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.</p>
-      </div>
-      <div class="badge" id="statusBadge">Open • Hari ini</div>
-    </section>
+<div class="info">
+  <h1>Butuh skincare dari Setiabudi hari ini?</h1>
+  <p>Deskripsi usaha akan tampil di sini.</p>
+</div>
 
-    <div class="filters" id="categoryFilters">
-      <div class="chip active" onclick="filterCategory('')">Semua</div>
-    </div>
+<button class="settings-btn" onclick="openSettings()">Settings</button>
 
-    <section class="grid" id="products"></section>
-  </main>
+<!-- SETTINGS MODAL -->
+<div id="settingsModal" onclick="closeModal(event)">
+  <div id="settingsBox" onclick="event.stopPropagation()">
+    <h2>Pengaturan Website</h2>
 
-  <button class="carticon" onclick="toggleCart()">
-    🛒<span id="cartcount" class="cartcount">0</span>
-  </button>
+    <label>Nama Usaha</label>
+    <input id="namaInput" placeholder="Contoh: Farma Jaya" />
 
-  <div id="cartdrawer" class="cartdrawer">
-    <h3>🛍️ Pesanan Kamu</h3>
-    <div id="cartitems"></div>
-    <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
-    <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
+    <label>Deskripsi Usaha</label>
+    <input id="descInput" placeholder="Contoh: Toko skincare & kosmetik" />
+
+    <label>Tagline Website</label>
+    <input id="taglineInput" placeholder="Contoh: Butuh skincare dari Setiabudi hari ini?" />
+
+    <label>Nomor WhatsApp</label>
+    <input id="waInput" placeholder="6281234567890" />
+
+    <label>Google Sheet URL</label>
+    <input id="sheetInput" placeholder="https://docs.google.com/..." />
+
+    <label>Logo (URL gambar)</label>
+    <input id="logoInput" placeholder="https://.../logo.png" />
+
+    <label>Warna Tema</label>
+    <input id="colorInput" type="color" />
+
+    <button onclick="saveSettings()">Simpan</button>
   </div>
+</div>
 
-  <footer>
-    <div id="footerText">Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="#" id="waLink">Chat WhatsApp</a></div>
-  </footer>
+<script>
+function openSettings(){
+  document.getElementById("settingsModal").style.display = "flex";
+  loadSettings();
+}
+function closeModal(e){
+  if(e.target.id === "settingsModal"){
+    document.getElementById("settingsModal").style.display = "none";
+  }
+}
 
-  <!-- SETUP / PROFILES MODAL -->
-  <div id="setupModal" class="modal-backdrop" style="display:none">
-    <div class="modal" role="dialog" aria-modal="true">
-      <h3>Pengaturan Toko / Profil</h3>
+function saveSettings(){
+  const settings = {
+    businessName: document.getElementById("namaInput").value,
+    description: document.getElementById("descInput").value,
+    tagline: document.getElementById("taglineInput").value,
+    wa: document.getElementById("waInput").value,
+    sheet: document.getElementById("sheetInput").value,
+    logo: document.getElementById("logoInput").value,
+    color: document.getElementById("colorInput").value
+  };
 
-      <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
-        <div style="flex:1">
-          <div class="small">Pilih profil</div>
-          <div class="profiles-list" id="profilesList"></div>
-        </div>
-        <div style="width:120px; text-align:right;">
-          <div class="small">Preview logo</div>
-          <div class="logo-preview" id="logoPreview">JS</div>
-        </div>
-      </div>
+  localStorage.setItem("settings", JSON.stringify(settings));
+  applySettings();
+  document.getElementById("settingsModal").style.display = "none";
+}
 
-      <div style="border-top:1px dashed #eee; padding-top:10px; margin-bottom:8px;">
-        <div class="field">
-          <label class="small">Nama Usaha</label>
-          <input id="inputNama" type="text" style="width:100%; padding:8px;">
-        </div>
+function loadSettings(){
+  const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
-        <div class="field">
-          <label class="small">Deskripsi Usaha (ditampilkan di hero)</label>
-          <textarea id="inputDeskripsi" style="width:100%; padding:8px;"></textarea>
-        </div>
+  if(settings.businessName) document.getElementById("namaInput").value = settings.businessName;
+  if(settings.description) document.getElementById("descInput").value = settings.description;
+  if(settings.tagline) document.getElementById("taglineInput").value = settings.tagline;
+  if(settings.wa) document.getElementById("waInput").value = settings.wa;
+  if(settings.sheet) document.getElementById("sheetInput").value = settings.sheet;
+  if(settings.logo) document.getElementById("logoInput").value = settings.logo;
+  if(settings.color) document.getElementById("colorInput").value = settings.color;
+}
 
-        <div class="row">
-          <div class="col field">
-            <label class="small">No WhatsApp (62...)</label>
-            <input id="inputWA" type="text" style="width:100%; padding:8px;" placeholder="62812...">
-          </div>
-          <div class="col field">
-            <label class="small">Link Google Sheet (CSV Export)</label>
-            <input id="inputSheet" type="text" style="width:100%; padding:8px;" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
-            <div id="sheetHelp" class="small" style="margin-top:6px;color:var(--muted)">Harus mengandung <code>/spreadsheets/d/</code> dan <code>export?format=csv</code></div>
-          </div>
-        </div>
+function applySettings(){
+  const settings = JSON.parse(localStorage.getItem("settings") || "{}");
 
-        <div class="row">
-          <div class="col field">
-            <label class="small">Upload Logo (opsional)</label>
-            <input id="inputLogo" type="file" accept="image/*">
-            <div class="small">Logo disimpan di browser (localStorage).</div>
-          </div>
-          <div class="col field">
-            <label class="small">Warna Tema (Accent)</label>
-            <input id="inputAccent" type="color" value="#2f8f4a" style="width:100%; height:40px; padding:6px;">
-            <div class="small" style="margin-top:6px">Atur juga background dan kartu (opsional)</div>
-            <div style="display:flex; gap:6px; margin-top:6px;">
-              <input id="inputBg" type="color" value="#f7f9f8" style="flex:1; height:36px;">
-              <input id="inputCard" type="color" value="#ffffff" style="flex:1; height:36px;">
-            </div>
-          </div>
-        </div>
+  if(settings.businessName)
+    document.querySelector(".title").textContent = settings.businessName;
 
-      </div>
+  if(settings.description)
+    document.querySelector(".info p").innerHTML = settings.description;
 
-      <div style="display:flex; gap:8px; justify-content:space-between; margin-top:8px;">
-        <div>
-          <button class="btn-ghost" onclick="closeSetupModal()">Batal</button>
-          <button class="btn-ghost" onclick="resetProfiles()">Reset Semua</button>
-        </div>
+  if(settings.tagline)
+    document.querySelector(".info h1").textContent = settings.tagline;
 
-        <div style="display:flex; gap:8px;">
-          <button class="danger" onclick="deleteCurrentProfile()">Hapus Profil</button>
-          <button class="btn-primary" onclick="saveProfile()">Simpan Profil</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  if(settings.logo)
+    document.querySelector(".logo").innerHTML = `<img src="${settings.logo}" style="width:100%;height:100%;border-radius:8px;object-fit:cover;">`;
 
-  <script>
-    /******************************
-     * Storage keys & state
-     ******************************/
-    const STORAGE_PROFILES = 'jastip_profiles'; // array of profiles
-    const STORAGE_CURRENT = 'jastip_current_profile'; // id of current profile
-    let profiles = JSON.parse(localStorage.getItem(STORAGE_PROFILES) || '[]');
-    let currentProfileId = localStorage.getItem(STORAGE_CURRENT) || null;
+  if(settings.color)
+    document.documentElement.style.setProperty('--accent', settings.color);
+}
 
-    let PRODUCTS = [];
-    let currentCategory = '';
-    let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
-
-    // DOM refs
-    const productsEl = document.getElementById('products');
-    const cartDrawer = document.getElementById('cartdrawer');
-    const cartCount = document.getElementById('cartcount');
-    const subtitleEl = document.getElementById('subtitleEl');
-    const heroDescEl = document.getElementById('heroDesc');
-    const waLink = document.getElementById('waLink');
-    const logoEl = document.getElementById('logoEl');
-    const logoPreview = document.getElementById('logoPreview');
-
-    /******************************
-     * Helpers
-     ******************************/
-    function formatRp(v){ if(isNaN(v)) return 'Rp0'; return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
-
-    function uid(){ return 'p_' + Math.random().toString(36).slice(2,9); }
-
-    function saveProfiles(){ localStorage.setItem(STORAGE_PROFILES, JSON.stringify(profiles)); }
-    function setCurrentProfile(id){
-      currentProfileId = id;
-      if(id) localStorage.setItem(STORAGE_CURRENT, id);
-      else localStorage.removeItem(STORAGE_CURRENT);
-    }
-    function getCurrentProfile(){ return profiles.find(p=>p.id === currentProfileId) || null; }
-
-    /******************************
-     * Modal controls & profile UI
-     ******************************/
-    function openSetupModal(){
-      renderProfilesList();
-      const modal = document.getElementById('setupModal');
-      modal.style.display = 'flex';
-    }
-
-    function closeSetupModal(){
-      const modal = document.getElementById('setupModal');
-      modal.style.display = 'none';
-    }
-
-    function renderProfilesList(){
-      const listEl = document.getElementById('profilesList');
-      listEl.innerHTML = '';
-      if(profiles.length === 0){
-        listEl.innerHTML = '<div class="small">Belum ada profil — buat profil baru dengan mengisi form di bawah.</div>';
-        fillFormWithProfile(null);
-        return;
-      }
-      profiles.forEach(p=>{
-        const div = document.createElement('div');
-        div.className = 'profile-item';
-        div.innerHTML = `
-          <div class="logo-preview" style="width:44px;height:44px">${p.logo ? `<img src="${p.logo}" alt="${p.name}">` : 'JS'}</div>
-          <div style="flex:1">
-            <div class="profile-name">${p.name}</div>
-            <div class="profile-meta">${p.sheet ? p.sheet : ''}</div>
-          </div>
-          <div>
-            <button class="btn-ghost" onclick="useProfile('${p.id}')">Pakai</button>
-          </div>
-        `;
-        listEl.appendChild(div);
-      });
-      // Fill form with current profile if exists
-      const current = getCurrentProfile();
-      fillFormWithProfile(current);
-    }
-
-    function useProfile(id){
-      const p = profiles.find(x=>x.id===id);
-      if(!p) return;
-      setCurrentProfile(id);
-      applySetup(p);
-      closeSetupModal();
-      loadProducts();
-    }
-
-    function fillFormWithProfile(p){
-      document.getElementById('inputNama').value = p ? p.name : '';
-      document.getElementById('inputDeskripsi').value = p ? p.desc : '';
-      document.getElementById('inputWA').value = p ? p.wa : '';
-      document.getElementById('inputSheet').value = p ? p.sheet : '';
-      document.getElementById('inputAccent').value = p && p.theme ? p.theme.accent || '#2f8f4a' : '#2f8f4a';
-      document.getElementById('inputBg').value = p && p.theme ? p.theme.bg || '#f7f9f8' : '#f7f9f8';
-      document.getElementById('inputCard').value = p && p.theme ? p.theme.card || '#ffffff' : '#ffffff';
-      if(p && p.logo){
-        logoPreview.innerHTML = `<img src="${p.logo}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
-      } else {
-        logoPreview.textContent = 'JS';
-      }
-    }
-
-    /******************************
-     * Save / Delete profile
-     ******************************/
-    // Validate sheet URL: must contain /spreadsheets/d/ and export?format=csv
-    function validateSheetUrl(u){
-      try{
-        if(!u) return false;
-        const ok1 = u.includes('/spreadsheets/d/');
-        const ok2 = u.includes('export?format=csv');
-        return ok1 && ok2;
-      }catch(e){ return false; }
-    }
-
-    // Read logo file input as data URL
-    document.getElementById('inputLogo').addEventListener('change', function(e){
-      const f = e.target.files[0];
-      if(!f) return;
-      const reader = new FileReader();
-      reader.onload = function(ev){
-        logoPreview.innerHTML = `<img src="${ev.target.result}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
-        // temporarily store in dataset for saving later
-        document.getElementById('setupModal').dataset.logoData = ev.target.result;
-      };
-      reader.readAsDataURL(f);
-    });
-
-    function saveProfile(){
-      const name = document.getElementById('inputNama').value.trim();
-      const desc = document.getElementById('inputDeskripsi').value.trim();
-      const wa = document.getElementById('inputWA').value.trim();
-      const sheet = document.getElementById('inputSheet').value.trim();
-      const accent = document.getElementById('inputAccent').value;
-      const bg = document.getElementById('inputBg').value;
-      const card = document.getElementById('inputCard').value;
-      const logoData = document.getElementById('setupModal').dataset.logoData || null;
-
-      if(!name || !desc || !wa || !sheet){
-        alert('Semua field (Nama, Deskripsi, WA, Sheet) wajib diisi.');
-        return;
-      }
-      if(!validateSheetUrl(sheet)){
-        alert('Link Google Sheet tidak valid. Pastikan berformat export?format=csv dan berisi /spreadsheets/d/.');
-        return;
-      }
-      // create or update profile
-      let profile;
-      if(currentProfileId){
-        profile = profiles.find(p=>p.id===currentProfileId);
-        if(profile){
-          profile.name = name; profile.desc = desc; profile.wa = wa; profile.sheet = sheet;
-          profile.theme = { accent, bg, card };
-          if(logoData) profile.logo = logoData;
-        }
-      }
-      if(!profile){
-        profile = { id: uid(), name, desc, wa, sheet, theme: { accent, bg, card }, logo: logoData || null, created: Date.now() };
-        profiles.push(profile);
-        setCurrentProfile(profile.id);
-      }
-      saveProfiles();
-      applySetup(profile);
-      renderProfilesList();
-      closeSetupModal();
-      loadProducts();
-      // cleanup temporary logo data
-      delete document.getElementById('setupModal').dataset.logoData;
-    }
-
-    function deleteCurrentProfile(){
-      if(!currentProfileId){
-        alert('Pilih profil untuk dihapus (klik "Pakai" di daftar profil lalu buka pengaturan lagi).');
-        return;
-      }
-      const ok = confirm('Yakin hapus profil ini? Tindakan ini tidak bisa dibatalkan.');
-      if(!ok) return;
-      profiles = profiles.filter(p=>p.id!==currentProfileId);
-      saveProfiles();
-      setCurrentProfile(null);
-      // reset UI to defaults
-      applyDefaultTheme();
-      renderProfilesList();
-      closeSetupModal();
-      productsEl.innerHTML = '';
-    }
-
-    function resetProfiles(){
-      if(!confirm('Reset semua profil dan pengaturan?')) return;
-      profiles = [];
-      saveProfiles();
-      setCurrentProfile(null);
-      applyDefaultTheme();
-      renderProfilesList();
-      closeSetupModal();
-      productsEl.innerHTML = '';
-      alert('Semua profil direset.');
-    }
-
-    /******************************
-     * Apply setup (theme, texts, wa)
-     ******************************/
-    function applySetup(profile){
-      if(!profile) return;
-      // theme
-      try{
-        if(profile.theme){
-          document.documentElement.style.setProperty('--accent', profile.theme.accent || '#2f8f4a');
-          document.documentElement.style.setProperty('--bg', profile.theme.bg || '#f7f9f8');
-          document.documentElement.style.setProperty('--card', profile.theme.card || '#ffffff');
-        }
-      }catch(e){}
-      // logo
-      if(profile.logo){
-        logoEl.innerHTML = `<img src="${profile.logo}" alt="${profile.name}">`;
-      } else {
-        logoEl.textContent = profile.name ? profile.name.slice(0,2).toUpperCase() : 'JS';
-      }
-      // texts
-      subtitleEl.textContent = profile.name || '';
-      heroDescEl.textContent = profile.desc || '';
-      // wa
-      waLink.href = `https://wa.me/${profile.wa}`;
-      // footer text include name
-      document.getElementById('footerText').textContent = `${profile.name} • Jadwal: Senin–Jumat • Order cutoff 16:00`;
-    }
-
-    function applyDefaultTheme(){
-      document.documentElement.style.setProperty('--accent', '#2f8f4a');
-      document.documentElement.style.setProperty('--bg', '#f7f9f8');
-      document.documentElement.style.setProperty('--card', '#ffffff');
-      logoEl.textContent = 'JS';
-      subtitleEl.textContent = 'Skincare & Bodycare — Fee Rp10.000/item';
-      heroDescEl.textContent = 'Order sebelum 16:00, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.';
-      waLink.href = '#';
-      document.getElementById('footerText').textContent = 'Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00';
-    }
-
-    /******************************
-     * Products & cart (same logic, adapted)
-     ******************************/
-    function loadProducts(){
-      const profile = getCurrentProfile();
-      if(!profile){
-        alert('Pilih atau buat profil terlebih dahulu.');
-        return;
-      }
-      const SHEET_URL = profile.sheet;
-      fetch(SHEET_URL)
-        .then(res => {
-          if(!res.ok) throw new Error('Fetch gagal');
-          return res.text();
-        })
-        .then(csv => {
-          const rows = csv.split("\n").slice(1).map(r=>r.trim()).filter(Boolean);
-          PRODUCTS = rows.map(r=>{
-            // split CSV but safely: split by comma - assume no commas in fields for simplicity
-            const parts = r.split(",");
-            const [name,shop,price,img,fee,category,promo] = parts;
-            return { id:Math.random(), name: name ? name.trim() : '', shop: shop ? shop.trim() : '', price: +(price||0), img: img ? img.trim() : '', fee: +(fee||0), category: category ? category.trim() : '', promo: (promo||'').trim().toLowerCase() };
-          }).filter(p=>p.name);
-          populateCategories();
-          renderProducts();
-        })
-        .catch(err=>{
-          console.error(err);
-          alert('Gagal memuat data dari Google Sheet. Pastikan link CSV valid dan dapat diakses (share: anyone with link).');
-        });
-    }
-
-    function populateCategories(){
-      const filtersEl = document.getElementById('categoryFilters');
-      filtersEl.innerHTML = '<div class="chip active" onclick="filterCategory(\'\')">Semua</div>';
-      const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
-      cats.forEach(cat=>{
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.textContent = cat;
-        chip.onclick = ()=>filterCategory(cat);
-        filtersEl.appendChild(chip);
-      });
-    }
-
-    function filterCategory(cat){
-      currentCategory = cat;
-      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      const selected = [...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
-      if(selected) selected.classList.add('active');
-      else document.querySelector('.chip:first-child').classList.add('active');
-      renderProducts();
-    }
-
-    function renderProducts(){
-      productsEl.innerHTML='';
-      PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
-      .forEach(p=>{
-        const card=document.createElement('div');
-        card.className='card';
-        const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}">` : `<div style="padding:8px;text-align:center;color:var(--muted)">${p.shop}</div>`;
-        card.innerHTML=`
-          <div class="img">${imgPart}</div>
-          <div class="pname">${escapeHtml(p.name)}</div>
-          <div class="shop">${escapeHtml(p.shop)}</div>
-          <div class="price">${formatRp(p.price)} + Fee ${formatRp(p.fee)}</div>
-          <button class="btn add" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee})">+ Titip</button>
-          <button class="btn quick" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee}, true)">Beli Cepat</button>
-        `;
-        productsEl.appendChild(card);
-      });
-      updateCartCount();
-    }
-
-    // escape helpers to avoid breaking inline onclick strings
-    function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/\n/g," "); }
-    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    function addToCart(name, price, openNow=false){
-      if(!cart[name]) cart[name] = {name, price, qty:0};
-      cart[name].qty++;
-      saveCart(); updateCartCount();
-      if(openNow) openCart();
-    }
-
-    function saveCart(){
-      localStorage.setItem("jastip_cart", JSON.stringify(cart));
-    }
-
-    function updateCartCount(){
-      const totalQty = Object.values(cart).reduce((a,b)=>a + b.qty,0);
-      cartCount.textContent = totalQty;
-      cartCount.style.display = totalQty>0 ? 'inline-block' : 'none';
-    }
-
-    function toggleCart(){
-      document.getElementById('cartdrawer').classList.toggle('active');
-      renderCart();
-    }
-
-    function openCart(){ document.getElementById('cartdrawer').classList.add('active'); renderCart(); }
-
-    function renderCart(){
-      const list=document.getElementById('cartitems');
-      const totalDiv=document.getElementById('carttotal');
-      list.innerHTML='';
-      let total=0;
-      const items=Object.values(cart);
-      if(items.length===0){ document.getElementById('cartdrawer').classList.remove('active'); return; }
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        list.innerHTML+=`
-          <div class="cart-item">
-            <div class="cart-item-name">${escapeHtml(i.name)}<br><small>${formatRp(i.price)}</small></div>
-            <div class="cart-controls">
-              <button onclick="changeQty('${escapeJs(i.name)}',-1)">-</button>
-              <span>${i.qty}</span>
-              <button onclick="changeQty('${escapeJs(i.name)}',1)">+</button>
-              <button onclick="removeItem('${escapeJs(i.name)}')">❌</button>
-            </div>
-          </div>`;
-      });
-      totalDiv.textContent='Total: '+formatRp(total);
-    }
-
-    function changeQty(name,delta){
-      if(!cart[name])return;
-      cart[name].qty+=delta;
-      if(cart[name].qty<=0) delete cart[name];
-      saveCart(); renderCart(); updateCartCount();
-    }
-
-    function removeItem(name){
-      delete cart[name];
-      saveCart(); renderCart(); updateCartCount();
-    }
-
-    function checkout(){
-      const items=Object.values(cart);
-      if(items.length===0) return alert('Keranjang kosong!');
-      const profile = getCurrentProfile();
-      const waNumber = profile ? profile.wa : '';
-      if(!waNumber){ alert('Nomor WhatsApp belum diatur di profil.'); return; }
-      let msg='Halo, saya mau titip:\n';
-      let total=0;
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
-      });
-      msg+=`\nTotal: ${formatRp(total)}\n`;
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');
-    }
-
-    /******************************
-     * Init on load
-     ******************************/
-    window.addEventListener('load', function(){
-      // apply current profile if exists
-      if(profiles.length>0 && currentProfileId){
-        const p = getCurrentProfile();
-        if(p) applySetup(p);
-      }
-      // if no profiles, open modal to create
-      if(profiles.length === 0){
-        openSetupModal();
-      } else {
-        // try load products if current profile exists
-        if(currentProfileId) loadProducts();
-      }
-      updateCartCount();
-    });
-
-    // Expose some functions to global for inline onclick to work
-    window.openSetupModal = openSetupModal;
-    window.closeSetupModal = closeSetupModal;
-    window.saveProfile = saveProfile;
-    window.deleteCurrentProfile = deleteCurrentProfile;
-    window.resetProfiles = resetProfiles;
-    window.filterCategory = filterCategory;
-    window.addToCart = addToCart;
-    window.toggleCart = toggleCart;
-    window.changeQty = changeQty;
-    window.removeItem = removeItem;
-    window.checkout = checkout;
-    window.useProfile = useProfile;
-
-  </script>
+applySettings();
+</script>
 </body>
 </html>
