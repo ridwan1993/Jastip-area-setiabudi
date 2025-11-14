@@ -599,7 +599,7 @@ main { padding: 14px; }
       }catch(e){}
       // logo
       if(profile.logo){
-        logoEl.innerHTML = `<img src="${profile.logo}" alt="${profile.name}">`;
+        logoEl.innerHTML = `<img width="50px" src="${profile.logo}" alt="${profile.name}">`;
       } else {
         logoEl.textContent = profile.name ? profile.name.slice(0,2).toUpperCase() : 'JS';
       }
@@ -812,6 +812,7 @@ main { padding: 14px; }
   </script>
 </body>
 </html>
+
 
 
 
