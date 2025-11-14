@@ -186,7 +186,7 @@
   <header>
     <div class="logo">JS</div>
     <div>
-      <div class="title">💼 JASTIP SETIABUDI → CILEJIT</div>
+      <div class="title">💼 Toko Online Instaan</div>
       <div class="subtitle">Skincare & Bodycare — Fee Rp10.000/item</div>
     </div>
   </header>
@@ -219,62 +219,188 @@
   </div>
 
   <footer>
-    <div>Jastip Setiabudi • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
+    <div>Toko Online Instan • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
     <div style="margin-top:6px">Contact: <a href="https://wa.me/6281234567890" id="waLink">Chat WhatsApp</a></div>
   </footer>
 
+<!-- MODAL SETUP USAHA -->
+<div id="setupModal" style="
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999;
+">
+  <div style="background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px;">
+    <h3>Pengaturan Usaha</h3>
+
+    <label>Nama Usaha</label>
+    <input id="inputNama" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+
+    <label>Deskripsi Usaha</label>
+    <textarea id="inputDeskripsi" style="width:100%; padding:8px; margin-bottom:10px"></textarea>
+
+    <label>No WhatsApp (62xxxx)</label>
+    <input id="inputWA" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+
+    <label>Link Google Sheet (CSV Export)</label>
+    <input id="inputSheet" type="text" style="width:100%; padding:8px; margin-bottom:12px">
+
+    <button onclick="submitSetup()" style="
+      width:100%; padding:10px; border:none;
+      background:#2f8f4a; color:#fff; border-radius:8px; font-weight:600;
+    ">Simpan</button>
+  </div>
+</div>
+
+<!-- MODAL SETUP USAHA -->
+<div id="setupModal" style="
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 99999;
+">
+  <div style="background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px;">
+    <h3>Pengaturan Usaha</h3>
+
+    <label>Nama Usaha</label>
+    <input id="inputNama" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+
+    <label>Deskripsi Usaha</label>
+    <textarea id="inputDeskripsi" style="width:100%; padding:8px; margin-bottom:10px"></textarea>
+
+    <label>No WhatsApp (62xxxx)</label>
+    <input id="inputWA" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+
+    <label>Link Google Sheet (CSV Export)</label>
+    <input id="inputSheet" type="text" style="width:100%; padding:8px; margin-bottom:12px">
+
+    <button onclick="submitSetup()" style="
+      width:100%; padding:10px; border:none;
+      background:#2f8f4a; color:#fff; border-radius:8px; font-weight:600;
+    ">Simpan</button>
+  </div>
+</div>
+
+
   <script>
-    const SHEET_URL = "https://docs.google.com/spreadsheets/d/1kc3sz6SwfZuxVQartjwif3npX85CiaMRcr_tPWRFD80/export?format=csv";
-    let PRODUCTS = [];
-    let currentCategory = '';
-    let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
+  let SHEET_URL = "";
+  let WA_NUMBER = "";
+  let PRODUCTS = [];
+  let currentCategory = '';
+  let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
 
-    const productsEl = document.getElementById('products');
-    const cartDrawer = document.getElementById('cartdrawer');
-    const cartCount = document.getElementById('cartcount');
+  function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
 
-    function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
+  // Ambil data setup dari localStorage
+  const savedSetup = JSON.parse(localStorage.getItem("setup_usaha") || "null");
 
+  // Jika belum ada → tampilkan modal
+  window.onload = function() {
+    if (!savedSetup) {
+      document.getElementById("setupModal").style.display = "flex";
+    } else {
+      applySetup(savedSetup);
+      loadProducts();
+    }
+  };
+
+  // Submit data modal
+  function submitSetup(){
+    const nama = document.getElementById("inputNama").value;
+    const desk = document.getElementById("inputDeskripsi").value;
+    const wa = document.getElementById("inputWA").value;
+    const sheet = document.getElementById("inputSheet").value;
+
+    if(!nama || !desk || !wa || !sheet){
+      alert("Semua field wajib diisi!");
+      return;
+    }
+
+    const data = {nama, desk, wa, sheet};
+
+    // Simpan
+    localStorage.setItem("setup_usaha", JSON.stringify(data));
+
+    // Terapkan
+    applySetup(data);
+
+    // Tutup modal
+    document.getElementById("setupModal").style.display="none";
+
+    // Load produk
+    loadProducts();
+  }
+
+  // Terapkan ke UI
+  function applySetup(data){
+    SHEET_URL = data.sheet;
+    WA_NUMBER = data.wa;
+
+    // Nama usaha → subtitle
+    document.querySelector(".subtitle").textContent = data.nama;
+
+    // Deskripsi usaha → hero.info
+    document.querySelector(".hero .info p").textContent = data.desk;
+
+    // Footer WA
+    document.getElementById("waLink").href = "https://wa.me/" + WA_NUMBER;
+  }
+
+  // Load produk dari Google Sheet
+  function loadProducts(){
     fetch(SHEET_URL)
-      .then(res => res.text())
-      .then(csv => {
+      .then(res=>res.text())
+      .then(csv=>{
         const rows = csv.split("\n").slice(1);
         PRODUCTS = rows.map(r=>{
           const [name,shop,price,img,fee,category,promo] = r.split(",");
-          return {id:Math.random(),name,shop,price:+price,img,fee:+fee,category,promo:promo?.trim().toLowerCase()};
+          return {
+            id:Math.random(),
+            name,shop,
+            price:+price,
+            img,
+            fee:+fee,
+            category,
+            promo:promo?.trim().toLowerCase()
+          };
         }).filter(p=>p.name);
+
         populateCategories();
         renderProducts();
-      });
+      })
+      .catch(()=>alert("Gagal memuat data dari Google Sheet."));
+  }
 
-    function populateCategories(){
-      const filtersEl = document.getElementById('categoryFilters');
-      const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
-      cats.forEach(cat=>{
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.textContent = cat;
-        chip.onclick = ()=>filterCategory(cat);
-        filtersEl.appendChild(chip);
-      });
-    }
+  function populateCategories(){
+    const filtersEl = document.getElementById('categoryFilters');
+    const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
 
-    function filterCategory(cat){
-      currentCategory = cat;
-      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      const selected = [...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
-      if(selected) selected.classList.add('active');
-      else document.querySelector('.chip:first-child').classList.add('active');
-      renderProducts();
-    }
+    cats.forEach(cat=>{
+      const chip=document.createElement('div');
+      chip.className='chip';
+      chip.textContent=cat;
+      chip.onclick=()=>filterCategory(cat);
+      filtersEl.appendChild(chip);
+    });
+  }
 
-    function renderProducts(){
-      productsEl.innerHTML='';
-      PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
+  function filterCategory(cat){
+    currentCategory=cat;
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    const selected=[...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
+    if(selected) selected.classList.add('active');
+    else document.querySelector('.chip:first-child').classList.add('active');
+    renderProducts();
+  }
+
+  function renderProducts(){
+    const productsEl = document.getElementById('products');
+    productsEl.innerHTML='';
+
+    PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
       .forEach(p=>{
         const card=document.createElement('div');
         card.className='card';
         const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}">` : p.shop;
+
         card.innerHTML=`
           <div class="img">${imgPart}</div>
           <div class="pname">${p.name}</div>
@@ -285,81 +411,97 @@
         `;
         productsEl.appendChild(card);
       });
-      updateCartCount();
+
+    updateCartCount();
+  }
+
+  function addToCart(name,price,openNow=false){
+    if(!cart[name]) cart[name]={name,price,qty:0};
+    cart[name].qty++;
+    saveCart(); updateCartCount();
+    if(openNow) openCart();
+  }
+
+  function saveCart(){
+    localStorage.setItem("jastip_cart", JSON.stringify(cart));
+  }
+
+  function updateCartCount(){
+    const cartCount=document.getElementById('cartcount');
+    const totalQty=Object.values(cart).reduce((a,b)=>a+b.qty,0);
+    cartCount.textContent=totalQty;
+    cartCount.style.display = totalQty>0?'inline-block':'none';
+  }
+
+  function toggleCart(){
+    document.getElementById('cartdrawer').classList.toggle('active');
+    renderCart();
+  }
+
+  function openCart(){
+    document.getElementById('cartdrawer').classList.add('active');
+    renderCart();
+  }
+
+  function renderCart(){
+    const list=document.getElementById('cartitems');
+    const totalDiv=document.getElementById('carttotal');
+    list.innerHTML='';
+    let total=0;
+
+    const items=Object.values(cart);
+    if(items.length===0){
+      document.getElementById('cartdrawer').classList.remove('active');
+      return;
     }
 
-    function addToCart(name, price, openNow=false){
-      if(!cart[name]) cart[name] = {name, price, qty:0};
-      cart[name].qty++;
-      saveCart(); updateCartCount();
-      if(openNow) openCart();
-    }
+    items.forEach(i=>{
+      const subtotal=i.price*i.qty; total+=subtotal;
+      list.innerHTML+=`
+        <div class="cart-item">
+          <div class="cart-item-name">${i.name}<br><small>${formatRp(i.price)}</small></div>
+          <div class="cart-controls">
+            <button onclick="changeQty('${i.name}',-1)">-</button>
+            <span>${i.qty}</span>
+            <button onclick="changeQty('${i.name}',1)">+</button>
+            <button onclick="removeItem('${i.name}')">❌</button>
+          </div>
+        </div>`;
+    });
 
-    function saveCart(){
-      localStorage.setItem("jastip_cart", JSON.stringify(cart));
-    }
+    totalDiv.textContent = 'Total: '+formatRp(total);
+  }
 
-    function updateCartCount(){
-      const totalQty = Object.values(cart).reduce((a,b)=>a+b.qty,0);
-      cartCount.textContent = totalQty;
-      cartCount.style.display = totalQty>0?'inline-block':'none';
-    }
+  function changeQty(name,delta){
+    if(!cart[name]) return;
+    cart[name].qty += delta;
 
-    function toggleCart(){
-      cartDrawer.classList.toggle('active');
-      renderCart();
-    }
+    if(cart[name].qty <= 0) delete cart[name];
+    saveCart(); renderCart(); updateCartCount();
+  }
 
-    function openCart(){ cartDrawer.classList.add('active'); renderCart(); }
+  function removeItem(name){
+    delete cart[name];
+    saveCart(); renderCart(); updateCartCount();
+  }
 
-    function renderCart(){
-      const list=document.getElementById('cartitems');
-      const totalDiv=document.getElementById('carttotal');
-      list.innerHTML='';
-      let total=0;
-      const items=Object.values(cart);
-      if(items.length===0){cartDrawer.classList.remove('active');return;}
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        list.innerHTML+=`
-          <div class="cart-item">
-            <div class="cart-item-name">${i.name}<br><small>${formatRp(i.price)}</small></div>
-            <div class="cart-controls">
-              <button onclick="changeQty('${i.name}',-1)">-</button>
-              <span>${i.qty}</span>
-              <button onclick="changeQty('${i.name}',1)">+</button>
-              <button onclick="removeItem('${i.name}')">❌</button>
-            </div>
-          </div>`;
-      });
-      totalDiv.textContent='Total: '+formatRp(total);
-    }
+  function checkout(){
+    const items=Object.values(cart);
+    if(items.length===0) return alert('Keranjang kosong!');
 
-    function changeQty(name,delta){
-      if(!cart[name])return;
-      cart[name].qty+=delta;
-      if(cart[name].qty<=0)delete cart[name];
-      saveCart();renderCart();updateCartCount();
-    }
+    let msg='Halo, saya mau titip:\n';
+    let total=0;
 
-    function removeItem(name){
-      delete cart[name];
-      saveCart();renderCart();updateCartCount();
-    }
+    items.forEach(i=>{
+      const subtotal=i.price*i.qty; total+=subtotal;
+      msg += `- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
+    });
 
-    function checkout(){
-      const items=Object.values(cart);
-      if(items.length===0)return alert('Keranjang kosong!');
-      let msg='Halo, saya mau titip:\n';
-      let total=0;
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
-      });
-      msg+=`\nTotal: ${formatRp(total)}\n`;
-      window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`,'_blank');
-    }
-  </script>
+    msg += `\nTotal: ${formatRp(total)}\n`;
+
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+</script>
+
 </body>
 </html>
-
