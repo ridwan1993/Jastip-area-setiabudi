@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Toko Online Instan</title>
+  <title>Jastip Setiabudi → Cilejit</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -28,7 +28,9 @@
       background: var(--accent); color: #fff;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700;
+      overflow: hidden;
     }
+    .logo img { width:100%; height:100%; object-fit:cover; display:block; }
     .title { font-size: 15px; font-weight: 600; }
     .subtitle { font-size: 12px; color: var(--muted); }
 
@@ -180,14 +182,44 @@
     footer {
       padding: 18px; text-align: center; color: var(--muted); font-size: 13px;
     }
+
+    /* Simple modal styles */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    }
+    .modal {
+      background: #fff; border-radius: 12px; padding: 16px;
+      width: 96%; max-width: 520px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    }
+    .modal h3 { margin-top:0; }
+    .row { display:flex; gap:8px; }
+    .col { flex:1; }
+    .field { margin-bottom:10px; }
+    .small { font-size:12px; color:var(--muted); }
+    .btn-ghost { background:transparent; border:1px solid #ddd; padding:8px 10px; border-radius:8px; cursor:pointer; }
+    .btn-primary { background:var(--accent); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+    .danger { background:var(--danger); color:#fff; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+
+    .profiles-list { max-height:180px; overflow:auto; margin-bottom:8px; border:1px solid #eee; padding:8px; border-radius:8px; }
+    .profile-item { display:flex; align-items:center; gap:8px; padding:6px; border-radius:8px; cursor:pointer; }
+    .profile-item:hover { background:#f7f7f7; }
+    .profile-name { font-weight:600; }
+    .profile-meta { font-size:12px; color:var(--muted); }
+    .logo-preview { width:36px; height:36px; border-radius:6px; overflow:hidden; background:#f0f0f0; display:flex; align-items:center; justify-content:center; }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">JS</div>
+    <div class="logo" id="logoEl">JS</div>
     <div>
       <div class="title">💼 Toko Online Instaan</div>
-      <div class="subtitle">Skincare & Bodycare — Fee Rp10.000/item</div>
+      <div class="subtitle" id="subtitleEl">Skincare & Bodycare — Fee Rp10.000/item</div>
+    </div>
+    <div style="margin-left:auto">
+      <button class="btn-ghost" onclick="openSetupModal()">Pengaturan • Toko</button>
     </div>
   </header>
 
@@ -195,9 +227,9 @@
     <section class="hero">
       <div class="info">
         <h1>Butuh skincare dari Setiabudi hari ini?</h1>
-        <p>Order sebelum <strong>16:00</strong>, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.</p>
+        <p id="heroDesc">Order sebelum <strong>16:00</strong>, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.</p>
       </div>
-      <div class="badge">Open • Hari ini</div>
+      <div class="badge" id="statusBadge">Open • Hari ini</div>
     </section>
 
     <div class="filters" id="categoryFilters">
@@ -219,291 +251,508 @@
   </div>
 
   <footer>
-    <div>Toko Online Instan • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="https://wa.me/6281234567890" id="waLink">Chat WhatsApp</a></div>
+    <div id="footerText">Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00</div>
+    <div style="margin-top:6px">Contact: <a href="#" id="waLink">Chat WhatsApp</a></div>
   </footer>
 
-<!-- MODAL SETUP USAHA -->
-<div id="setupModal" style="
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 99999;
-">
-  <div style="background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px;">
-    <h3>Pengaturan Usaha</h3>
+  <!-- SETUP / PROFILES MODAL -->
+  <div id="setupModal" class="modal-backdrop" style="display:none">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3>Pengaturan Toko / Profil</h3>
 
-    <label>Nama Usaha</label>
-    <input id="inputNama" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+      <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
+        <div style="flex:1">
+          <div class="small">Pilih profil</div>
+          <div class="profiles-list" id="profilesList"></div>
+        </div>
+        <div style="width:120px; text-align:right;">
+          <div class="small">Preview logo</div>
+          <div class="logo-preview" id="logoPreview">JS</div>
+        </div>
+      </div>
 
-    <label>Deskripsi Usaha</label>
-    <textarea id="inputDeskripsi" style="width:100%; padding:8px; margin-bottom:10px"></textarea>
+      <div style="border-top:1px dashed #eee; padding-top:10px; margin-bottom:8px;">
+        <div class="field">
+          <label class="small">Nama Usaha</label>
+          <input id="inputNama" type="text" style="width:100%; padding:8px;">
+        </div>
 
-    <label>No WhatsApp (62xxxx)</label>
-    <input id="inputWA" type="text" style="width:100%; padding:8px; margin-bottom:10px">
+        <div class="field">
+          <label class="small">Deskripsi Usaha (ditampilkan di hero)</label>
+          <textarea id="inputDeskripsi" style="width:100%; padding:8px;"></textarea>
+        </div>
 
-    <label>Link Google Sheet (CSV Export)</label>
-    <input id="inputSheet" type="text" style="width:100%; padding:8px; margin-bottom:12px">
+        <div class="row">
+          <div class="col field">
+            <label class="small">No WhatsApp (62...)</label>
+            <input id="inputWA" type="text" style="width:100%; padding:8px;" placeholder="62812...">
+          </div>
+          <div class="col field">
+            <label class="small">Link Google Sheet (CSV Export)</label>
+            <input id="inputSheet" type="text" style="width:100%; padding:8px;" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
+            <div id="sheetHelp" class="small" style="margin-top:6px;color:var(--muted)">Harus mengandung <code>/spreadsheets/d/</code> dan <code>export?format=csv</code></div>
+          </div>
+        </div>
 
-    <button onclick="submitSetup()" style="
-      width:100%; padding:10px; border:none;
-      background:#2f8f4a; color:#fff; border-radius:8px; font-weight:600;
-    ">Simpan</button>
+        <div class="row">
+          <div class="col field">
+            <label class="small">Upload Logo (opsional)</label>
+            <input id="inputLogo" type="file" accept="image/*">
+            <div class="small">Logo disimpan di browser (localStorage).</div>
+          </div>
+          <div class="col field">
+            <label class="small">Warna Tema (Accent)</label>
+            <input id="inputAccent" type="color" value="#2f8f4a" style="width:100%; height:40px; padding:6px;">
+            <div class="small" style="margin-top:6px">Atur juga background dan kartu (opsional)</div>
+            <div style="display:flex; gap:6px; margin-top:6px;">
+              <input id="inputBg" type="color" value="#f7f9f8" style="flex:1; height:36px;">
+              <input id="inputCard" type="color" value="#ffffff" style="flex:1; height:36px;">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex; gap:8px; justify-content:space-between; margin-top:8px;">
+        <div>
+          <button class="btn-ghost" onclick="closeSetupModal()">Batal</button>
+          <button class="btn-ghost" onclick="resetProfiles()">Reset Semua</button>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button class="danger" onclick="deleteCurrentProfile()">Hapus Profil</button>
+          <button class="btn-primary" onclick="saveProfile()">Simpan Profil</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
-<!-- MODAL SETUP USAHA -->
-<div id="setupModal" style="
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 99999;
-">
-  <div style="background:#fff; padding:20px; border-radius:12px; width:90%; max-width:400px;">
-    <h3>Pengaturan Usaha</h3>
-
-    <label>Nama Usaha</label>
-    <input id="inputNama" type="text" style="width:100%; padding:8px; margin-bottom:10px">
-
-    <label>Deskripsi Usaha</label>
-    <textarea id="inputDeskripsi" style="width:100%; padding:8px; margin-bottom:10px"></textarea>
-
-    <label>No WhatsApp (62xxxx)</label>
-    <input id="inputWA" type="text" style="width:100%; padding:8px; margin-bottom:10px">
-
-    <label>Link Google Sheet (CSV Export)</label>
-    <input id="inputSheet" type="text" style="width:100%; padding:8px; margin-bottom:12px">
-
-    <button onclick="submitSetup()" style="
-      width:100%; padding:10px; border:none;
-      background:#2f8f4a; color:#fff; border-radius:8px; font-weight:600;
-    ">Simpan</button>
-  </div>
-</div>
-
 
   <script>
-  let SHEET_URL = "";
-  let WA_NUMBER = "";
-  let PRODUCTS = [];
-  let currentCategory = '';
-  let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
+    /******************************
+     * Storage keys & state
+     ******************************/
+    const STORAGE_PROFILES = 'jastip_profiles'; // array of profiles
+    const STORAGE_CURRENT = 'jastip_current_profile'; // id of current profile
+    let profiles = JSON.parse(localStorage.getItem(STORAGE_PROFILES) || '[]');
+    let currentProfileId = localStorage.getItem(STORAGE_CURRENT) || null;
 
-  function formatRp(v){return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');}
+    let PRODUCTS = [];
+    let currentCategory = '';
+    let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
 
-  // Ambil data setup dari localStorage
-  const savedSetup = JSON.parse(localStorage.getItem("setup_usaha") || "null");
+    // DOM refs
+    const productsEl = document.getElementById('products');
+    const cartDrawer = document.getElementById('cartdrawer');
+    const cartCount = document.getElementById('cartcount');
+    const subtitleEl = document.getElementById('subtitleEl');
+    const heroDescEl = document.getElementById('heroDesc');
+    const waLink = document.getElementById('waLink');
+    const logoEl = document.getElementById('logoEl');
+    const logoPreview = document.getElementById('logoPreview');
 
-  // Jika belum ada → tampilkan modal
-  window.onload = function() {
-    if (!savedSetup) {
-      document.getElementById("setupModal").style.display = "flex";
-    } else {
-      applySetup(savedSetup);
+    /******************************
+     * Helpers
+     ******************************/
+    function formatRp(v){ if(isNaN(v)) return 'Rp0'; return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+
+    function uid(){ return 'p_' + Math.random().toString(36).slice(2,9); }
+
+    function saveProfiles(){ localStorage.setItem(STORAGE_PROFILES, JSON.stringify(profiles)); }
+    function setCurrentProfile(id){
+      currentProfileId = id;
+      if(id) localStorage.setItem(STORAGE_CURRENT, id);
+      else localStorage.removeItem(STORAGE_CURRENT);
+    }
+    function getCurrentProfile(){ return profiles.find(p=>p.id === currentProfileId) || null; }
+
+    /******************************
+     * Modal controls & profile UI
+     ******************************/
+    function openSetupModal(){
+      renderProfilesList();
+      const modal = document.getElementById('setupModal');
+      modal.style.display = 'flex';
+    }
+
+    function closeSetupModal(){
+      const modal = document.getElementById('setupModal');
+      modal.style.display = 'none';
+    }
+
+    function renderProfilesList(){
+      const listEl = document.getElementById('profilesList');
+      listEl.innerHTML = '';
+      if(profiles.length === 0){
+        listEl.innerHTML = '<div class="small">Belum ada profil — buat profil baru dengan mengisi form di bawah.</div>';
+        fillFormWithProfile(null);
+        return;
+      }
+      profiles.forEach(p=>{
+        const div = document.createElement('div');
+        div.className = 'profile-item';
+        div.innerHTML = `
+          <div class="logo-preview" style="width:44px;height:44px">${p.logo ? `<img src="${p.logo}" alt="${p.name}">` : 'JS'}</div>
+          <div style="flex:1">
+            <div class="profile-name">${p.name}</div>
+            <div class="profile-meta">${p.sheet ? p.sheet : ''}</div>
+          </div>
+          <div>
+            <button class="btn-ghost" onclick="useProfile('${p.id}')">Pakai</button>
+          </div>
+        `;
+        listEl.appendChild(div);
+      });
+      // Fill form with current profile if exists
+      const current = getCurrentProfile();
+      fillFormWithProfile(current);
+    }
+
+    function useProfile(id){
+      const p = profiles.find(x=>x.id===id);
+      if(!p) return;
+      setCurrentProfile(id);
+      applySetup(p);
+      closeSetupModal();
       loadProducts();
     }
-  };
 
-  // Submit data modal
-  function submitSetup(){
-    const nama = document.getElementById("inputNama").value;
-    const desk = document.getElementById("inputDeskripsi").value;
-    const wa = document.getElementById("inputWA").value;
-    const sheet = document.getElementById("inputSheet").value;
+    function fillFormWithProfile(p){
+      document.getElementById('inputNama').value = p ? p.name : '';
+      document.getElementById('inputDeskripsi').value = p ? p.desc : '';
+      document.getElementById('inputWA').value = p ? p.wa : '';
+      document.getElementById('inputSheet').value = p ? p.sheet : '';
+      document.getElementById('inputAccent').value = p && p.theme ? p.theme.accent || '#2f8f4a' : '#2f8f4a';
+      document.getElementById('inputBg').value = p && p.theme ? p.theme.bg || '#f7f9f8' : '#f7f9f8';
+      document.getElementById('inputCard').value = p && p.theme ? p.theme.card || '#ffffff' : '#ffffff';
+      if(p && p.logo){
+        logoPreview.innerHTML = `<img src="${p.logo}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
+      } else {
+        logoPreview.textContent = 'JS';
+      }
+    }
 
-    //if(!nama || !desk || !wa || !sheet){
-    //  alert("Semua field wajib diisi!");
-    //  return;
-    //}
+    /******************************
+     * Save / Delete profile
+     ******************************/
+    // Validate sheet URL: must contain /spreadsheets/d/ and export?format=csv
+    function validateSheetUrl(u){
+      try{
+        if(!u) return false;
+        const ok1 = u.includes('/spreadsheets/d/');
+        const ok2 = u.includes('export?format=csv');
+        return ok1 && ok2;
+      }catch(e){ return false; }
+    }
 
-    const data = {nama, desk, wa, sheet};
-
-	console.log(data);
-
-    // Simpan
-    localStorage.setItem("setup_usaha", JSON.stringify(data));
-
-    // Terapkan
-    applySetup(data);
-
-    // Tutup modal
-    document.getElementById("setupModal").style.display="none";
-
-    // Load produk
-    loadProducts();
-  }
-
-  // Terapkan ke UI
-  function applySetup(data){
-    SHEET_URL = data.sheet;
-    WA_NUMBER = data.wa;
-
-    // Nama usaha → subtitle
-    document.querySelector(".subtitle").textContent = data.nama;
-
-    // Deskripsi usaha → hero.info
-    document.querySelector(".hero .info p").textContent = data.desk;
-
-    // Footer WA
-    document.getElementById("waLink").href = "https://wa.me/" + WA_NUMBER;
-  }
-
-  // Load produk dari Google Sheet
-  function loadProducts(){
-    fetch(SHEET_URL)
-      .then(res=>res.text())
-      .then(csv=>{
-        const rows = csv.split("\n").slice(1);
-        PRODUCTS = rows.map(r=>{
-          const [name,shop,price,img,fee,category,promo] = r.split(",");
-          return {
-            id:Math.random(),
-            name,shop,
-            price:+price,
-            img,
-            fee:+fee,
-            category,
-            promo:promo?.trim().toLowerCase()
-          };
-        }).filter(p=>p.name);
-
-        populateCategories();
-        renderProducts();
-      })
-      .catch(()=>alert("Gagal memuat data dari Google Sheet."));
-  }
-
-  function populateCategories(){
-    const filtersEl = document.getElementById('categoryFilters');
-    const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
-
-    cats.forEach(cat=>{
-      const chip=document.createElement('div');
-      chip.className='chip';
-      chip.textContent=cat;
-      chip.onclick=()=>filterCategory(cat);
-      filtersEl.appendChild(chip);
+    // Read logo file input as data URL
+    document.getElementById('inputLogo').addEventListener('change', function(e){
+      const f = e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = function(ev){
+        logoPreview.innerHTML = `<img src="${ev.target.result}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
+        // temporarily store in dataset for saving later
+        document.getElementById('setupModal').dataset.logoData = ev.target.result;
+      };
+      reader.readAsDataURL(f);
     });
-  }
 
-  function filterCategory(cat){
-    currentCategory=cat;
-    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-    const selected=[...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
-    if(selected) selected.classList.add('active');
-    else document.querySelector('.chip:first-child').classList.add('active');
-    renderProducts();
-  }
+    function saveProfile(){
+      const name = document.getElementById('inputNama').value.trim();
+      const desc = document.getElementById('inputDeskripsi').value.trim();
+      const wa = document.getElementById('inputWA').value.trim();
+      const sheet = document.getElementById('inputSheet').value.trim();
+      const accent = document.getElementById('inputAccent').value;
+      const bg = document.getElementById('inputBg').value;
+      const card = document.getElementById('inputCard').value;
+      const logoData = document.getElementById('setupModal').dataset.logoData || null;
 
-  function renderProducts(){
-    const productsEl = document.getElementById('products');
-    productsEl.innerHTML='';
+      if(!name || !desc || !wa || !sheet){
+        alert('Semua field (Nama, Deskripsi, WA, Sheet) wajib diisi.');
+        return;
+      }
+      if(!validateSheetUrl(sheet)){
+        alert('Link Google Sheet tidak valid. Pastikan berformat export?format=csv dan berisi /spreadsheets/d/.');
+        return;
+      }
+      // create or update profile
+      let profile;
+      if(currentProfileId){
+        profile = profiles.find(p=>p.id===currentProfileId);
+        if(profile){
+          profile.name = name; profile.desc = desc; profile.wa = wa; profile.sheet = sheet;
+          profile.theme = { accent, bg, card };
+          if(logoData) profile.logo = logoData;
+        }
+      }
+      if(!profile){
+        profile = { id: uid(), name, desc, wa, sheet, theme: { accent, bg, card }, logo: logoData || null, created: Date.now() };
+        profiles.push(profile);
+        setCurrentProfile(profile.id);
+      }
+      saveProfiles();
+      applySetup(profile);
+      renderProfilesList();
+      closeSetupModal();
+      loadProducts();
+      // cleanup temporary logo data
+      delete document.getElementById('setupModal').dataset.logoData;
+    }
 
-    PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
+    function deleteCurrentProfile(){
+      if(!currentProfileId){
+        alert('Pilih profil untuk dihapus (klik "Pakai" di daftar profil lalu buka pengaturan lagi).');
+        return;
+      }
+      const ok = confirm('Yakin hapus profil ini? Tindakan ini tidak bisa dibatalkan.');
+      if(!ok) return;
+      profiles = profiles.filter(p=>p.id!==currentProfileId);
+      saveProfiles();
+      setCurrentProfile(null);
+      // reset UI to defaults
+      applyDefaultTheme();
+      renderProfilesList();
+      closeSetupModal();
+      productsEl.innerHTML = '';
+    }
+
+    function resetProfiles(){
+      if(!confirm('Reset semua profil dan pengaturan?')) return;
+      profiles = [];
+      saveProfiles();
+      setCurrentProfile(null);
+      applyDefaultTheme();
+      renderProfilesList();
+      closeSetupModal();
+      productsEl.innerHTML = '';
+      alert('Semua profil direset.');
+    }
+
+    /******************************
+     * Apply setup (theme, texts, wa)
+     ******************************/
+    function applySetup(profile){
+      if(!profile) return;
+      // theme
+      try{
+        if(profile.theme){
+          document.documentElement.style.setProperty('--accent', profile.theme.accent || '#2f8f4a');
+          document.documentElement.style.setProperty('--bg', profile.theme.bg || '#f7f9f8');
+          document.documentElement.style.setProperty('--card', profile.theme.card || '#ffffff');
+        }
+      }catch(e){}
+      // logo
+      if(profile.logo){
+        logoEl.innerHTML = `<img src="${profile.logo}" alt="${profile.name}">`;
+      } else {
+        logoEl.textContent = profile.name ? profile.name.slice(0,2).toUpperCase() : 'JS';
+      }
+      // texts
+      subtitleEl.textContent = profile.name || '';
+      heroDescEl.textContent = profile.desc || '';
+      // wa
+      waLink.href = `https://wa.me/${profile.wa}`;
+      // footer text include name
+      document.getElementById('footerText').textContent = `${profile.name} • Jadwal: Senin–Jumat • Order cutoff 16:00`;
+    }
+
+    function applyDefaultTheme(){
+      document.documentElement.style.setProperty('--accent', '#2f8f4a');
+      document.documentElement.style.setProperty('--bg', '#f7f9f8');
+      document.documentElement.style.setProperty('--card', '#ffffff');
+      logoEl.textContent = 'JS';
+      subtitleEl.textContent = 'Skincare & Bodycare — Fee Rp10.000/item';
+      heroDescEl.textContent = 'Order sebelum 16:00, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.';
+      waLink.href = '#';
+      document.getElementById('footerText').textContent = 'Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00';
+    }
+
+    /******************************
+     * Products & cart (same logic, adapted)
+     ******************************/
+    function loadProducts(){
+      const profile = getCurrentProfile();
+      if(!profile){
+        alert('Pilih atau buat profil terlebih dahulu.');
+        return;
+      }
+      const SHEET_URL = profile.sheet;
+      fetch(SHEET_URL)
+        .then(res => {
+          if(!res.ok) throw new Error('Fetch gagal');
+          return res.text();
+        })
+        .then(csv => {
+          const rows = csv.split("\n").slice(1).map(r=>r.trim()).filter(Boolean);
+          PRODUCTS = rows.map(r=>{
+            // split CSV but safely: split by comma - assume no commas in fields for simplicity
+            const parts = r.split(",");
+            const [name,shop,price,img,fee,category,promo] = parts;
+            return { id:Math.random(), name: name ? name.trim() : '', shop: shop ? shop.trim() : '', price: +(price||0), img: img ? img.trim() : '', fee: +(fee||0), category: category ? category.trim() : '', promo: (promo||'').trim().toLowerCase() };
+          }).filter(p=>p.name);
+          populateCategories();
+          renderProducts();
+        })
+        .catch(err=>{
+          console.error(err);
+          alert('Gagal memuat data dari Google Sheet. Pastikan link CSV valid dan dapat diakses (share: anyone with link).');
+        });
+    }
+
+    function populateCategories(){
+      const filtersEl = document.getElementById('categoryFilters');
+      filtersEl.innerHTML = '<div class="chip active" onclick="filterCategory(\'\')">Semua</div>';
+      const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
+      cats.forEach(cat=>{
+        const chip = document.createElement('div');
+        chip.className = 'chip';
+        chip.textContent = cat;
+        chip.onclick = ()=>filterCategory(cat);
+        filtersEl.appendChild(chip);
+      });
+    }
+
+    function filterCategory(cat){
+      currentCategory = cat;
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      const selected = [...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
+      if(selected) selected.classList.add('active');
+      else document.querySelector('.chip:first-child').classList.add('active');
+      renderProducts();
+    }
+
+    function renderProducts(){
+      productsEl.innerHTML='';
+      PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
       .forEach(p=>{
         const card=document.createElement('div');
         card.className='card';
-        const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}">` : p.shop;
-
+        const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}">` : `<div style="padding:8px;text-align:center;color:var(--muted)">${p.shop}</div>`;
         card.innerHTML=`
           <div class="img">${imgPart}</div>
-          <div class="pname">${p.name}</div>
-          <div class="shop">${p.shop}</div>
+          <div class="pname">${escapeHtml(p.name)}</div>
+          <div class="shop">${escapeHtml(p.shop)}</div>
           <div class="price">${formatRp(p.price)} + Fee ${formatRp(p.fee)}</div>
-          <button class="btn add" onclick="addToCart('${p.name}', ${p.price+p.fee})">+ Titip</button>
-          <button class="btn quick" onclick="addToCart('${p.name}', ${p.price+p.fee}, true)">Beli Cepat</button>
+          <button class="btn add" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee})">+ Titip</button>
+          <button class="btn quick" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee}, true)">Beli Cepat</button>
         `;
         productsEl.appendChild(card);
       });
-
-    updateCartCount();
-  }
-
-  function addToCart(name,price,openNow=false){
-    if(!cart[name]) cart[name]={name,price,qty:0};
-    cart[name].qty++;
-    saveCart(); updateCartCount();
-    if(openNow) openCart();
-  }
-
-  function saveCart(){
-    localStorage.setItem("jastip_cart", JSON.stringify(cart));
-  }
-
-  function updateCartCount(){
-    const cartCount=document.getElementById('cartcount');
-    const totalQty=Object.values(cart).reduce((a,b)=>a+b.qty,0);
-    cartCount.textContent=totalQty;
-    cartCount.style.display = totalQty>0?'inline-block':'none';
-  }
-
-  function toggleCart(){
-    document.getElementById('cartdrawer').classList.toggle('active');
-    renderCart();
-  }
-
-  function openCart(){
-    document.getElementById('cartdrawer').classList.add('active');
-    renderCart();
-  }
-
-  function renderCart(){
-    const list=document.getElementById('cartitems');
-    const totalDiv=document.getElementById('carttotal');
-    list.innerHTML='';
-    let total=0;
-
-    const items=Object.values(cart);
-    if(items.length===0){
-      document.getElementById('cartdrawer').classList.remove('active');
-      return;
+      updateCartCount();
     }
 
-    items.forEach(i=>{
-      const subtotal=i.price*i.qty; total+=subtotal;
-      list.innerHTML+=`
-        <div class="cart-item">
-          <div class="cart-item-name">${i.name}<br><small>${formatRp(i.price)}</small></div>
-          <div class="cart-controls">
-            <button onclick="changeQty('${i.name}',-1)">-</button>
-            <span>${i.qty}</span>
-            <button onclick="changeQty('${i.name}',1)">+</button>
-            <button onclick="removeItem('${i.name}')">❌</button>
-          </div>
-        </div>`;
+    // escape helpers to avoid breaking inline onclick strings
+    function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/\n/g," "); }
+    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function addToCart(name, price, openNow=false){
+      if(!cart[name]) cart[name] = {name, price, qty:0};
+      cart[name].qty++;
+      saveCart(); updateCartCount();
+      if(openNow) openCart();
+    }
+
+    function saveCart(){
+      localStorage.setItem("jastip_cart", JSON.stringify(cart));
+    }
+
+    function updateCartCount(){
+      const totalQty = Object.values(cart).reduce((a,b)=>a + b.qty,0);
+      cartCount.textContent = totalQty;
+      cartCount.style.display = totalQty>0 ? 'inline-block' : 'none';
+    }
+
+    function toggleCart(){
+      document.getElementById('cartdrawer').classList.toggle('active');
+      renderCart();
+    }
+
+    function openCart(){ document.getElementById('cartdrawer').classList.add('active'); renderCart(); }
+
+    function renderCart(){
+      const list=document.getElementById('cartitems');
+      const totalDiv=document.getElementById('carttotal');
+      list.innerHTML='';
+      let total=0;
+      const items=Object.values(cart);
+      if(items.length===0){ document.getElementById('cartdrawer').classList.remove('active'); return; }
+      items.forEach(i=>{
+        const subtotal=i.price*i.qty; total+=subtotal;
+        list.innerHTML+=`
+          <div class="cart-item">
+            <div class="cart-item-name">${escapeHtml(i.name)}<br><small>${formatRp(i.price)}</small></div>
+            <div class="cart-controls">
+              <button onclick="changeQty('${escapeJs(i.name)}',-1)">-</button>
+              <span>${i.qty}</span>
+              <button onclick="changeQty('${escapeJs(i.name)}',1)">+</button>
+              <button onclick="removeItem('${escapeJs(i.name)}')">❌</button>
+            </div>
+          </div>`;
+      });
+      totalDiv.textContent='Total: '+formatRp(total);
+    }
+
+    function changeQty(name,delta){
+      if(!cart[name])return;
+      cart[name].qty+=delta;
+      if(cart[name].qty<=0) delete cart[name];
+      saveCart(); renderCart(); updateCartCount();
+    }
+
+    function removeItem(name){
+      delete cart[name];
+      saveCart(); renderCart(); updateCartCount();
+    }
+
+    function checkout(){
+      const items=Object.values(cart);
+      if(items.length===0) return alert('Keranjang kosong!');
+      const profile = getCurrentProfile();
+      const waNumber = profile ? profile.wa : '';
+      if(!waNumber){ alert('Nomor WhatsApp belum diatur di profil.'); return; }
+      let msg='Halo, saya mau titip:\n';
+      let total=0;
+      items.forEach(i=>{
+        const subtotal=i.price*i.qty; total+=subtotal;
+        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
+      });
+      msg+=`\nTotal: ${formatRp(total)}\n`;
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');
+    }
+
+    /******************************
+     * Init on load
+     ******************************/
+    window.addEventListener('load', function(){
+      // apply current profile if exists
+      if(profiles.length>0 && currentProfileId){
+        const p = getCurrentProfile();
+        if(p) applySetup(p);
+      }
+      // if no profiles, open modal to create
+      if(profiles.length === 0){
+        openSetupModal();
+      } else {
+        // try load products if current profile exists
+        if(currentProfileId) loadProducts();
+      }
+      updateCartCount();
     });
 
-    totalDiv.textContent = 'Total: '+formatRp(total);
-  }
+    // Expose some functions to global for inline onclick to work
+    window.openSetupModal = openSetupModal;
+    window.closeSetupModal = closeSetupModal;
+    window.saveProfile = saveProfile;
+    window.deleteCurrentProfile = deleteCurrentProfile;
+    window.resetProfiles = resetProfiles;
+    window.filterCategory = filterCategory;
+    window.addToCart = addToCart;
+    window.toggleCart = toggleCart;
+    window.changeQty = changeQty;
+    window.removeItem = removeItem;
+    window.checkout = checkout;
+    window.useProfile = useProfile;
 
-  function changeQty(name,delta){
-    if(!cart[name]) return;
-    cart[name].qty += delta;
-
-    if(cart[name].qty <= 0) delete cart[name];
-    saveCart(); renderCart(); updateCartCount();
-  }
-
-  function removeItem(name){
-    delete cart[name];
-    saveCart(); renderCart(); updateCartCount();
-  }
-
-  function checkout(){
-    const items=Object.values(cart);
-    if(items.length===0) return alert('Keranjang kosong!');
-
-    let msg='Halo, saya mau titip:\n';
-    let total=0;
-
-    items.forEach(i=>{
-      const subtotal=i.price*i.qty; total+=subtotal;
-      msg += `- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
-    });
-
-    msg += `\nTotal: ${formatRp(total)}\n`;
-
-    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');
-  }
-</script>
-
+  </script>
 </body>
 </html>
