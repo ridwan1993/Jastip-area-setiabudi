@@ -209,6 +209,73 @@
     .profile-name { font-weight:600; }
     .profile-meta { font-size:12px; color:var(--muted); }
     .logo-preview { width:36px; height:36px; border-radius:6px; overflow:hidden; background:#f0f0f0; display:flex; align-items:center; justify-content:center; }
+		/* ————————————————
+		   RESPONSIVE MODAL SETUP
+		——————————————— */
+
+		/* MODE HP KECIL */
+		@media (max-width: 480px) {
+		  .modal {
+			width: 96%;
+			max-width: 96%;
+			padding: 14px;
+			border-radius: 14px;
+			margin: 0 2%;
+		  }
+
+		  .row {
+			flex-direction: column;
+			gap: 4px;
+		  }
+
+		  .col {
+			width: 100%;
+		  }
+
+		  .profiles-list {
+			max-height: 150px;
+		  }
+
+		  .profile-item {
+			padding: 8px 4px;
+		  }
+
+		  .logo-preview {
+			width: 40px;
+			height: 40px;
+		  }
+
+		  .btn-ghost,
+		  .btn-primary,
+		  .danger {
+			width: 100%;
+			margin-top: 6px;
+		  }
+
+		  .modal h3 {
+			font-size: 17px;
+		  }
+		}
+
+		/* MODE TABLET / HP LEBAR */
+		@media (max-width: 768px) {
+		  .modal {
+			padding: 18px;
+			width: 90%;
+		  }
+		  .row {
+			gap: 6px;
+		  }
+		}
+
+		/* Menghindari modal overflow bila ada keyboard HP */
+		@media (max-height: 620px) {
+		  .modal {
+			max-height: 90vh;
+			overflow-y: auto;
+		  }
+		}
+
   </style>
 </head>
 <body>
@@ -756,4 +823,3 @@
   </script>
 </body>
 </html>
-
