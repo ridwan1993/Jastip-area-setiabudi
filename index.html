@@ -446,7 +446,7 @@ main { padding: 14px; }
         const div = document.createElement('div');
         div.className = 'profile-item';
         div.innerHTML = `
-          <div class="logo-preview" style="width:44px;height:44px">${p.logo ? `<img src="${p.logo}" alt="${p.name}">` : 'JS'}</div>
+          <div class="logo-preview" style="width:44px;height:44px">${p.logo ? `<img width="44px" src="${p.logo}" alt="${p.name}">` : 'JS'}</div>
           <div style="flex:1">
             <div class="profile-name">${p.name}</div>
             <div class="profile-meta">${p.sheet ? p.sheet : ''}</div>
@@ -811,6 +811,7 @@ main { padding: 14px; }
   </script>
 </body>
 </html>
+
 
 
 
