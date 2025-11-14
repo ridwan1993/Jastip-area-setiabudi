@@ -188,7 +188,24 @@ main { padding: 14px; }
   z-index: 100;
 }
 .cartdrawer.active { bottom: 0; }
+.cart-item { display: flex; justify-content: space-between; align-items: center;
+      margin: 8px 0; padding-bottom: 6px; border-bottom: 1px solid #eee; }
+    .cart-item-name { font-size: 13px; }
+    .cart-controls button {
+      background: #eef6ee; border: none; border-radius: 6px;
+      padding: 4px 8px; margin: 0 3px; cursor: pointer;
+    }
 
+    .checkout {
+      background: var(--accent); color: #fff; border: 0;
+      padding: 10px; width: 100%; border-radius: 10px;
+      font-weight: 600; margin-top: 12px;
+    }
+
+    footer {
+      padding: 18px; text-align: center; color: var(--muted); font-size: 13px;
+    }
+    
 /* MODAL — iOS STYLE */
 .modal-backdrop {
   position: fixed; inset: 0;
@@ -812,6 +829,7 @@ main { padding: 14px; }
   </script>
 </body>
 </html>
+
 
 
 
