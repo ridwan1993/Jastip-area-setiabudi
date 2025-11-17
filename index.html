@@ -2,875 +2,183 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Toko Online Instan</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-:root {
-  --bg: #f7f9f8;
-  --card: #ffffff;
-  --accent: #2f8f4a;
-  --muted: #6b6b6b;
-  --danger: #e15555;
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 10px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-
-  --trans: .22s cubic-bezier(.25,.1,.25,1);
-}
-
-* { box-sizing: border-box; font-family: Inter, system-ui, sans-serif; }
-body { margin: 0; background: var(--bg); color: #111; }
-
-/* HEADER */
-header {
-  background: linear-gradient(90deg,#fff 0%, #f7fff9 100%);
-  padding: 14px 16px;
-  border-bottom: 1px solid #e6efe6;
-  display: flex; align-items: center; gap: 12px;
-  position: sticky; top: 0; z-index: 10;
-}
-
-.logo {
-  width: 44px; height: 44px; border-radius: var(--radius-md);
-  background: var(--accent); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.title { font-size: 15px; font-weight: 600; }
-.subtitle { font-size: 12px; color: var(--muted); }
-
-/* HERO */
-main { padding: 14px; }
-
-.hero {
-  background: var(--card);
-  padding: 14px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  display: flex; gap: 14px; align-items: center;
-  transition: var(--trans);
-}
-.profile-item {overflow:hidden;}
-
-.hero:hover { box-shadow: var(--shadow-lg); }
-
-.hero h1 { margin: 0; font-size: 17px; font-weight: 700; }
-.hero p { margin: 6px 0 0; color: var(--muted); font-size: 13px; }
-
-.badge {
-  background: var(--accent); color: #fff; padding: 8px 10px;
-  border-radius: var(--radius-md); font-size: 13px;
-  box-shadow: var(--shadow-sm);
-  position: absolute;
-  right: 23px;
-}
-
-/* FILTER CHIPS */
-.filters {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin: 16px 0 12px;
-}
-
-.chip {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  background: #ffffff;
-  border: 1px solid #dfe7df;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: var(--trans);
-  box-shadow: var(--shadow-sm);
-}
-
-.chip:hover {
-  background: #eaf7ec;
-  border-color: #bde3c1;
-  color: #1e7b38;
-}
-
-.chip.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-  box-shadow: 0 4px 12px rgba(47,143,74,0.3);
-}
-
-/* GRID — Products */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-  gap: 12px;
-}
-
-.card {
-  background: var(--card);
-  padding: 12px;
-  border-radius: var(--radius-lg);
-  border: 1px solid #eef6ee;
-  transition: var(--trans);
-  box-shadow: var(--shadow-sm);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-
-.img {
-  height: 115px;
-  background: linear-gradient(135deg,#f3f9f3,#ffffff);
-  border-radius: var(--radius-md);
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden;
-}
-
-.img img { width: 100%; height: 100%; object-fit: cover; }
-
-.pname { font-size: 13px; margin: 8px 0 3px; font-weight: 600; }
-.shop { font-size: 12px; color: var(--muted); }
-.price { font-weight: 700; margin-top: 4px; font-size: 13px;margin-bottom: 4px; }
-
-.btn {
-  width: 100%;
-  padding: 8px;
-  border-radius: var(--radius-md);
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--trans);
-}
-
-.btn.add { background: #fff; border: 1px solid #cfe9c9; color: var(--accent); }
-.btn.add:hover { background: #eaf7eb; }
-
-.btn.quick { background: var(--accent); color: #fff; margin-top: 6px; }
-.btn.quick:hover { background: #24743a; }
-
-/* CART BUTTON */
-.carticon {
-  position: fixed; bottom: 16px; right: 16px;
-  width: 56px; height: 56px;
-  background: var(--accent); color: #fff;
-  border-radius: 50%;
-  font-size: 22px;
-  box-shadow: var(--shadow-lg);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  z-index: 50;
-  transition: var(--trans);
-}
-.carticon:hover { transform: scale(1.05); }
-
-.cartcount {
-  position: absolute; top: 4px; right: 6px;
-  background: #ff5757; color: #fff;
-  font-size: 12px; padding: 2px 6px; border-radius: 10px;
-  display: none;
-}
-
-/* CART DRAWER */
-.cartdrawer {
-  position: fixed; bottom: -100%; left: 0; right: 0;
-  background: #fff;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  box-shadow: -2px -2px 24px rgba(0,0,0,0.15);
-  padding: 20px;
-  transition: var(--trans);
-  z-index: 100;
-}
-.cartdrawer.active { bottom: 0; }
-.cart-item { display: flex; justify-content: space-between; align-items: center;
-      margin: 8px 0; padding-bottom: 6px; border-bottom: 1px solid #eee; }
-    .cart-item-name { font-size: 13px; }
-    .cart-controls button {
-      background: #eef6ee; border: none; border-radius: 6px;
-      padding: 4px 8px; margin: 0 3px; cursor: pointer;
+    :root {
+      --primary: #4f46e5;
+      --bg: #ffffff;
+      --text: #111827;
     }
-
-    .checkout {
-      background: var(--accent); color: #fff; border: 0;
-      padding: 10px; width: 100%; border-radius: 10px;
-      font-weight: 600; margin-top: 12px;
+    [data-theme="dark"] {
+      --primary: #818cf8;
+      --bg: #0f0f10;
+      --text: #e5e5e5;
     }
-
-    footer {
-      padding: 18px; text-align: center; color: var(--muted); font-size: 13px;
+    body {
+      font-family: Inter, sans-serif;
+      margin:0;
+      background: var(--bg);
+      color: var(--text);
     }
-    
-/* MODAL — iOS STYLE */
-.modal-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.35);
-  backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 9999;
-}
+    header {
+      padding:16px;
+      font-size:20px;
+      font-weight:600;
+      background:var(--primary);
+      color:white;
+      text-align:center;
+    }
+    .container { padding:16px; }
+    .product-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(150px,1fr));
+      gap:16px;
+    }
+    .product {
+      background:rgba(0,0,0,0.04);
+      border-radius:14px;
+      padding:10px;
+      cursor:pointer;
+      transition:0.2s;
+    }
+    .product:hover { transform:scale(1.02); }
+    .product img {
+      width:100%; border-radius:12px;
+    }
+    .product-title { font-size:14px; margin-top:6px; }
+    .product-price { font-size:15px; font-weight:600; color:var(--primary); }
 
-.modal {
-  background: #fff;
-  border-radius: 20px;
-  padding: 18px;
-  width: 94%;
-  max-width: 480px;
-  box-shadow: var(--shadow-lg);
-  animation: pop .25s ease;
-  margin-top: 115px;
-}
-
-@keyframes pop {
-  from { transform: scale(.97); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
-}
-
-/* Form elements */
-.field input,
-.field textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e4e4e4;
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  transition: var(--trans);
-}
-
-.field input:focus,
-.field textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(47,143,74,.15);
-  outline: none;
-}
-
-.btn-primary {
-  background: var(--accent); color: white;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  border: none;
-}
-
-.btn-ghost {
-  background: #fafafa;
-  border: 1px solid #e5e5e5;
-  padding: 9px 12px;
-  border-radius: var(--radius-md);
-}
-
-.danger {
-  background: var(--danger); color: #fff;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-}
-
-/* RESPONSIVE MODAL */
-@media (max-width: 480px) {
-  .modal { width: 96%; border-radius: 18px; padding: 16px; }
-  .row { flex-direction: column; gap: 6px; }
-  .btn-primary, .btn-ghost, .danger { width: 100%; }
-}
-
-/* SMALL HEIGHT (keyboard open) */
-@media (max-height: 600px) {
-  .modal { max-height: 92vh; overflow-y: auto; }
-}
-.modal-close { 
-  background: rgba(0,0,0,0.06);
-  border: none;
-  font-size: 22px;
-  width: 32px;
-  height: 32px;
-  line-height: 32px;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(4px);
-  transition: 0.2s;
-}
-
-.modal-close:hover {
-  background: rgba(0,0,0,0.12);
-}
-
+    /* Modal */
+    .modal-backdrop {
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.65);
+      display:none; justify-content:center; align-items:center;
+      padding:20px;
+    }
+    .modal {
+      background:var(--bg);
+      color:var(--text);
+      padding:20px;
+      width:100%; max-width:430px;
+      border-radius:20px;
+    }
+    .cart-btn {
+      position:fixed;
+      bottom:20px; right:20px;
+      background:var(--primary);
+      color:white;
+      padding:14px 18px;
+      border-radius:50px;
+      font-weight:600;
+      cursor:pointer;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo" id="logoEl">JS</div>
-    <div>
-      <div class="title">💼 Demo Toko</div>
-      <div class="subtitle" id="subtitleEl">Keterangan Produk</div>
-    </div>
-    <div style="margin-left:auto">
-      <button class="btn-ghost" onclick="openSetupModal()">Pengaturan • Toko</button>
-    </div>
-  </header>
+  <header id="shopName">Toko Online</header>
 
-  <main>
-    <section class="hero">
-      <div class="info">
-        <h1>Tagline Produk . .</h1>
-        <p id="heroDesc">Order sebelum <strong>16:00</strong>, Deskripsi Produk.</p>
-      </div>
-      <div class="badge" id="statusBadge">Open • Hari ini</div>
-    </section>
-
-    <div class="filters" id="categoryFilters">
-      <div class="chip active" onclick="filterCategory('')">Semua</div>
-    </div>
-
-    <section class="grid" id="products"></section>
-  </main>
-
-  <button class="carticon" onclick="toggleCart()">
-    🛒<span id="cartcount" class="cartcount">0</span>
-  </button>
-
-  <div id="cartdrawer" class="cartdrawer">
-    <h3>🛍️ Pesanan Kamu</h3>
-    <div id="cartitems"></div>
-    <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
-    <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
+  <div class="container">
+    <div class="product-grid" id="productList"></div>
   </div>
 
-  <footer style="text-align: center;">
-    <div id="footerText">Demo Toko <br>• Jadwal: Senin–Jumat • Order cutoff 16:00</div>
-    <div style="margin-top:6px">Contact: <a href="#" id="waLink">Chat WhatsApp</a></div>
-  </footer>
+  <div class="cart-btn" onclick="openCart()">Keranjang</div>
 
-  <!-- SETUP / PROFILES MODAL -->
-  <div id="setupModal" class="modal-backdrop" style="display:none;overflow:auto;">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div id="headermodal" style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin: 8px 0;">
-      <h3>Pengaturan Toko / Profil</h3>
-      <button class="modal-close" onclick="closeSetupModal()">×</button>      
-      </div>
-      <div style="display:none; gap:8px; margin-bottom:12px; align-items:center;">
-        <div style="flex:1;max-width: 74%;">
-          <div class="small">Pilih profil</div>
-          <div class="profiles-list" id="profilesList"></div>
-        </div>
-        <div style="width:120px; text-align:right;">
-          <div class="small">Preview logo</div>
-          <div class="logo-preview" id="logoPreview">JS</div>
-        </div>
-      </div>
+  <!-- MODAL DETAIL PRODUK -->
+  <div id="modalProduct" class="modal-backdrop">
+    <div class="modal" id="modalContent"></div>
+  </div>
 
-      <div style="border-top:1px dashed #eee; padding-top:10px; margin-bottom:8px;">
-        <div class="field">
-          <label class="small">Nama Usaha</label>
-          <input id="inputNama" type="text" style="width:100%; padding:8px;">
-        </div>
-
-        <div class="field">
-          <label class="small">Deskripsi Usaha (ditampilkan di bawah Tagline)</label>
-          <textarea id="inputDeskripsi" style="width:100%; padding:8px;"></textarea>
-        </div>
-
-        <div class="row">
-          <div class="col field">
-            <label class="small">No WhatsApp (62...)</label>
-            <input id="inputWA" type="text" style="width:100%; padding:8px;" placeholder="62812...">
-          </div>
-          <div class="col field">
-            <label class="small">Link Google Sheet (CSV Export)</label>
-            <input id="inputSheet" type="text" style="width:100%; padding:8px;" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv">
-            <div id="sheetHelp" class="small" style="margin-top:6px;color:var(--muted)">Harus mengandung <code>/spreadsheets/d/</code> dan <code>export?format=csv</code></div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col field">
-            <label class="small">Upload Logo (opsional)</label>
-            <input id="inputLogo" type="file" accept="image/*">
-            <div class="small">Logo disimpan di browser (localStorage).</div>
-          </div>
-          <div class="col field">
-            <label class="small">Warna Tema (Accent)</label>
-            <input id="inputAccent" type="color" value="#2f8f4a" style="width:100%; height:40px; padding:6px;">
-            <div class="small" style="margin-top:6px">Atur juga background dan kartu (opsional)</div>
-            <div style="display:flex; gap:6px; margin-top:6px;">
-              <input id="inputBg" type="color" value="#f7f9f8" style="flex:1; height:36px;">
-              <input id="inputCard" type="color" value="#ffffff" style="flex:1; height:36px;">
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div style="display:flex; gap:8px; justify-content:space-between; margin-top:8px;">
-        <div>
-          <button class="btn-ghost" onclick="closeSetupModal()"> Batal </button>
-          <button class="btn-ghost" onclick="resetProfiles()">Reset Semua</button>
-        </div>
-
-        <div style="display:flex; gap:8px;">
-          <button class="danger" onclick="deleteCurrentProfile()">Hapus Profil</button>
-          <button class="btn-primary" onclick="saveProfile()">Simpan Profil</button>
-        </div>
-      </div>
-
-      <br><br><br><br>
-    </div>
+  <!-- CART MODAL -->
+  <div id="modalCart" class="modal-backdrop">
+    <div class="modal" id="cartContent"></div>
   </div>
 
   <script>
-    /******************************
-     * Storage keys & state
-     ******************************/
-    const STORAGE_PROFILES = 'jastip_profiles'; // array of profiles
-    const STORAGE_CURRENT = 'jastip_current_profile'; // id of current profile
-    let profiles = JSON.parse(localStorage.getItem(STORAGE_PROFILES) || '[]');
-    let currentProfileId = localStorage.getItem(STORAGE_CURRENT) || null;
+    let cart = []; // keranjang sederhana
 
-    let PRODUCTS = [];
-    let currentCategory = '';
-    let cart = JSON.parse(localStorage.getItem("jastip_cart") || "{}");
+    // Load data dari Google Sheet CSV (ganti link)
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/xxxxxxxx/export?format=csv";
 
-    // DOM refs
-    const productsEl = document.getElementById('products');
-    const cartDrawer = document.getElementById('cartdrawer');
-    const cartCount = document.getElementById('cartcount');
-    const subtitleEl = document.getElementById('subtitleEl');
-    const heroDescEl = document.getElementById('heroDesc');
-    const waLink = document.getElementById('waLink');
-    const logoEl = document.getElementById('logoEl');
-    const logoPreview = document.getElementById('logoPreview');
+    async function loadProducts() {
+      const res = await fetch(SHEET_URL);
+      const text = await res.text();
+      const rows = text.split("\n").map(r => r.split(","));
 
-    /******************************
-     * Helpers
-     ******************************/
-    function formatRp(v){ if(isNaN(v)) return 'Rp0'; return 'Rp'+v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+      const headers = rows.shift();
+      const data = rows.map(r => Object.fromEntries(r.map((v,i)=>[headers[i], v])));
 
-    function uid(){ return 'p_' + Math.random().toString(36).slice(2,9); }
-
-    function saveProfiles(){ localStorage.setItem(STORAGE_PROFILES, JSON.stringify(profiles)); }
-    function setCurrentProfile(id){
-      currentProfileId = id;
-      if(id) localStorage.setItem(STORAGE_CURRENT, id);
-      else localStorage.removeItem(STORAGE_CURRENT);
-    }
-    function getCurrentProfile(){ return profiles.find(p=>p.id === currentProfileId) || null; }
-
-    /******************************
-     * Modal controls & profile UI
-     ******************************/
-    function openSetupModal(){
-      renderProfilesList();
-      const modal = document.getElementById('setupModal');
-      modal.style.display = 'flex';
+      renderProducts(list){
+      const box = document.getElementById("productList");
+      box.innerHTML = list.map(p => `
+        <div class="product" onclick='openDetail(${JSON.stringify(p)})'>
+          <img src="${p.img}">
+          <div class="product-title">${p.nama}</div>
+          <div class="product-price">Rp ${p.price}</div>
+        </div>`
+      ).join("");
+    }(data);
     }
 
-    function closeSetupModal(){
-      const modal = document.getElementById('setupModal');
-      modal.style.display = 'none';
+    function renderProducts(list){
+      const box = document.getElementById("productList");
+      box.innerHTML = list.map(p => `
+        <div class="product" onclick='openDetail(p){
+      document.getElementById("modalProduct").style.display="flex";
+      document.getElementById("modalContent").innerHTML = `
+        <img src="${p.img}" style="width:100%;border-radius:14px;">
+        <h2>${p.nama}</h2>
+        <p><b>Kategori:</b> ${p.category || '-'}<br>
+        <b>Promo:</b> ${p.promo || '-'}</p>
+        <h3 style="color:var(--primary)">Rp ${p.price}</h3>
+        <button style='padding:12px 16px;background:var(--primary);color:white;border-radius:10px;width:100%;margin-top:10px;font-weight:600' onclick='addToCart(${JSON.stringify(p)})'>Tambahkan ke Keranjang</button>
+        <br><br>
+        <button onclick='closeDetail()' style='padding:10px;width:100%;margin-top:6px;border-radius:10px;'>Tutup</button>`;
+    }(${JSON.stringify(p)})'>
+          <img src="${p.gambar}">
+          <div class="product-title">${p.nama}</div>
+          <div class="product-price">Rp ${p.harga}</div>
+        </div>`
+      ).join("");
     }
 
-    function renderProfilesList(){
-      const listEl = document.getElementById('profilesList');
-      listEl.innerHTML = '';
-      if(profiles.length === 0){
-        listEl.innerHTML = '<div class="small">Belum ada profil — buat profil baru dengan mengisi form di bawah.</div>';
-        fillFormWithProfile(null);
-        return;
-      }
-      profiles.forEach(p=>{
-        const div = document.createElement('div');
-        div.className = 'profile-item';
-        div.innerHTML = `
-          <div class="logo-preview" style="width:44px;height:44px">${p.logo ? `<img width="44px" src="${p.logo}" alt="${p.name}">` : 'JS'}</div>
-          <div style="flex:1">
-            <div class="profile-name">${p.name}</div>
-            <div class="profile-meta">${p.sheet ? p.sheet : ''}</div>
-          </div>
-          <div>
-            <button class="btn-ghost" onclick="useProfile('${p.id}')">Pakai</button>
-          </div>
-        `;
-        listEl.appendChild(div);
+    function openDetail(p){
+      document.getElementById("modalProduct").style.display="flex";
+      document.getElementById("modalContent").innerHTML = `
+        <img src="${p.gambar}" style="width:100%;border-radius:14px;">
+        <h2>${p.nama}</h2>
+        <p>${p.deskripsi}</p>
+        <h3 style="color:var(--primary)">Rp ${p.harga}</h3>
+        <button style='padding:12px 16px;background:var(--primary);color:white;border-radius:10px;width:100%;margin-top:10px;font-weight:600' onclick='addToCart(${JSON.stringify(p)})'>Tambahkan ke Keranjang</button>
+        <br><br>
+        <button onclick='closeDetail()' style='padding:10px;width:100%;margin-top:6px;border-radius:10px;'>Tutup</button>`;
+    }
+    function closeDetail(){ document.getElementById("modalProduct").style.display="none"; }
+
+    function addToCart(p){
+      cart.push(p);
+      alert("Ditambahkan ke keranjang");
+    }
+
+    function openCart(){
+      document.getElementById("modalCart").style.display="flex";
+      let html = `<h2>Keranjang</h2>`;
+      cart.forEach((item,i)=>{
+        html += `<div style='margin:10px 0;border-bottom:1px solid #ccc;padding-bottom:8px;'>${item.nama} - Rp ${item.harga}</div>`;
       });
-      // Fill form with current profile if exists
-      const current = getCurrentProfile();
-      fillFormWithProfile(current);
+      html += `<button onclick='closeCart()' style='padding:12px;width:100%;margin-top:10px;border-radius:10px;'>Tutup</button>`;
+      document.getElementById("cartContent").innerHTML = html;
+    }
+    function closeCart(){ document.getElementById("modalCart").style.display="none"; }
+
+    // Dark mode toggle (opsional)
+    function toggleTheme(){
+      const cur = document.body.getAttribute("data-theme");
+      document.body.setAttribute("data-theme", cur=="dark"?"light":"dark");
     }
 
-    function useProfile(id){
-      const p = profiles.find(x=>x.id===id);
-      if(!p) return;
-      setCurrentProfile(id);
-      applySetup(p);
-      closeSetupModal();
-      loadProducts();
-    }
-
-    function fillFormWithProfile(p){
-      document.getElementById('inputNama').value = p ? p.name : '';
-      document.getElementById('inputDeskripsi').value = p ? p.desc : '';
-      document.getElementById('inputWA').value = p ? p.wa : '';
-      document.getElementById('inputSheet').value = p ? p.sheet : '';
-      document.getElementById('inputAccent').value = p && p.theme ? p.theme.accent || '#2f8f4a' : '#2f8f4a';
-      document.getElementById('inputBg').value = p && p.theme ? p.theme.bg || '#f7f9f8' : '#f7f9f8';
-      document.getElementById('inputCard').value = p && p.theme ? p.theme.card || '#ffffff' : '#ffffff';
-      if(p && p.logo){
-        logoPreview.innerHTML = `<img src="${p.logo}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
-      } else {
-        logoPreview.textContent = 'JS';
-      }
-    }
-
-    /******************************
-     * Save / Delete profile
-     ******************************/
-    // Validate sheet URL: must contain /spreadsheets/d/ and export?format=csv
-    function validateSheetUrl(u){
-      try{
-        if(!u) return false;
-        const ok1 = u.includes('/spreadsheets/d/');
-        const ok2 = u.includes('export?format=csv');
-        return ok1 && ok2;
-      }catch(e){ return false; }
-    }
-
-    // Read logo file input as data URL
-    document.getElementById('inputLogo').addEventListener('change', function(e){
-      const f = e.target.files[0];
-      if(!f) return;
-      const reader = new FileReader();
-      reader.onload = function(ev){
-        logoPreview.innerHTML = `<img src="${ev.target.result}" alt="logo" style="width:100%;height:100%;object-fit:cover">`;
-        // temporarily store in dataset for saving later
-        document.getElementById('setupModal').dataset.logoData = ev.target.result;
-      };
-      reader.readAsDataURL(f);
-    });
-
-    function saveProfile(){
-      const name = document.getElementById('inputNama').value.trim();
-      const desc = document.getElementById('inputDeskripsi').value.trim();
-      const wa = document.getElementById('inputWA').value.trim();
-      const sheet = document.getElementById('inputSheet').value.trim();
-      const accent = document.getElementById('inputAccent').value;
-      const bg = document.getElementById('inputBg').value;
-      const card = document.getElementById('inputCard').value;
-      const logoData = document.getElementById('setupModal').dataset.logoData || null;
-
-      if(!name || !desc || !wa || !sheet){
-        alert('Semua field (Nama, Deskripsi, WA, Sheet) wajib diisi.');
-        return;
-      }
-      if(!validateSheetUrl(sheet)){
-        alert('Link Google Sheet tidak valid. Pastikan berformat export?format=csv dan berisi /spreadsheets/d/.');
-        return;
-      }
-      // create or update profile
-      let profile;
-      if(currentProfileId){
-        profile = profiles.find(p=>p.id===currentProfileId);
-        if(profile){
-          profile.name = name; profile.desc = desc; profile.wa = wa; profile.sheet = sheet;
-          profile.theme = { accent, bg, card };
-          if(logoData) profile.logo = logoData;
-        }
-      }
-      if(!profile){
-        profile = { id: uid(), name, desc, wa, sheet, theme: { accent, bg, card }, logo: logoData || null, created: Date.now() };
-        profiles.push(profile);
-        setCurrentProfile(profile.id);
-      }
-      saveProfiles();
-      applySetup(profile);
-      renderProfilesList();
-      closeSetupModal();
-      loadProducts();
-      // cleanup temporary logo data
-      delete document.getElementById('setupModal').dataset.logoData;
-    }
-
-    function deleteCurrentProfile(){
-      if(!currentProfileId){
-        alert('Pilih profil untuk dihapus (klik "Pakai" di daftar profil lalu buka pengaturan lagi).');
-        return;
-      }
-      const ok = confirm('Yakin hapus profil ini? Tindakan ini tidak bisa dibatalkan.');
-      if(!ok) return;
-      profiles = profiles.filter(p=>p.id!==currentProfileId);
-      saveProfiles();
-      setCurrentProfile(null);
-      // reset UI to defaults
-      applyDefaultTheme();
-      renderProfilesList();
-      closeSetupModal();
-      productsEl.innerHTML = '';
-    }
-
-    function resetProfiles(){
-      if(!confirm('Reset semua profil dan pengaturan?')) return;
-      profiles = [];
-      saveProfiles();
-      setCurrentProfile(null);
-      applyDefaultTheme();
-      renderProfilesList();
-      closeSetupModal();
-      productsEl.innerHTML = '';
-      alert('Semua profil direset.');
-    }
-
-    /******************************
-     * Apply setup (theme, texts, wa)
-     ******************************/
-    function applySetup(profile){
-      if(!profile) return;
-      // theme
-      try{
-        if(profile.theme){
-          document.documentElement.style.setProperty('--accent', profile.theme.accent || '#2f8f4a');
-          document.documentElement.style.setProperty('--bg', profile.theme.bg || '#f7f9f8');
-          document.documentElement.style.setProperty('--card', profile.theme.card || '#ffffff');
-        }
-      }catch(e){}
-      // logo
-      if(profile.logo){
-        logoEl.innerHTML = `<img width="50px" src="${profile.logo}" alt="${profile.name}">`;
-      } else {
-        logoEl.textContent = profile.name ? profile.name.slice(0,2).toUpperCase() : 'JS';
-      }
-      // texts
-      subtitleEl.textContent = profile.name || '';
-      heroDescEl.textContent = profile.desc || '';
-      // wa
-      waLink.href = `https://wa.me/${profile.wa}`;
-      // footer text include name
-      document.getElementById('footerText').textContent = `${profile.name} • Jadwal: Senin–Jumat • Order cutoff 16:00`;
-    }
-
-    function applyDefaultTheme(){
-      document.documentElement.style.setProperty('--accent', '#2f8f4a');
-      document.documentElement.style.setProperty('--bg', '#f7f9f8');
-      document.documentElement.style.setProperty('--card', '#ffffff');
-      logoEl.textContent = 'JS';
-      subtitleEl.textContent = 'Skincare & Bodycare — Fee Rp10.000/item';
-      heroDescEl.textContent = 'Order sebelum 16:00, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.';
-      waLink.href = '#';
-      document.getElementById('footerText').textContent = 'Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00';
-    }
-
-    /******************************
-     * Products & cart (same logic, adapted)
-     ******************************/
-    function loadProducts(){
-      const profile = getCurrentProfile();
-      if(!profile){
-        alert('Pilih atau buat profil terlebih dahulu.');
-        return;
-      }
-      const SHEET_URL = profile.sheet;
-      fetch(SHEET_URL)
-        .then(res => {
-          if(!res.ok) throw new Error('Fetch gagal');
-          return res.text();
-        })
-        .then(csv => {
-          const rows = csv.split("\n").slice(1).map(r=>r.trim()).filter(Boolean);
-          PRODUCTS = rows.map(r=>{
-            // split CSV but safely: split by comma - assume no commas in fields for simplicity
-            const parts = r.split(",");
-            const [name,shop,price,img,fee,category,promo] = parts;
-            return { id:Math.random(), name: name ? name.trim() : '', shop: shop ? shop.trim() : '', price: +(price||0), img: img ? img.trim() : '', fee: +(fee||0), category: category ? category.trim() : '', promo: (promo||'').trim().toLowerCase() };
-          }).filter(p=>p.name);
-          populateCategories();
-          renderProducts();
-        })
-        .catch(err=>{
-          console.error(err);
-          alert('Gagal memuat data dari Google Sheet. Pastikan link CSV valid dan dapat diakses (share: anyone with link).');
-        });
-    }
-
-    function populateCategories(){
-      const filtersEl = document.getElementById('categoryFilters');
-      filtersEl.innerHTML = '<div class="chip active" onclick="filterCategory(\'\')">Semua</div>';
-      const cats = [...new Set(PRODUCTS.map(p=>p.category))].filter(Boolean);
-      cats.forEach(cat=>{
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.textContent = cat;
-        chip.onclick = ()=>filterCategory(cat);
-        filtersEl.appendChild(chip);
-      });
-    }
-
-    function filterCategory(cat){
-      currentCategory = cat;
-      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-      const selected = [...document.querySelectorAll('.chip')].find(c=>c.textContent===cat);
-      if(selected) selected.classList.add('active');
-      else document.querySelector('.chip:first-child').classList.add('active');
-      renderProducts();
-    }
-
-    function renderProducts(){
-      productsEl.innerHTML='';
-      PRODUCTS.filter(p=>!currentCategory || p.category===currentCategory)
-      .forEach(p=>{
-        const card=document.createElement('div');
-        card.className='card';
-        const imgPart = p.img ? `<img src="${p.img}" alt="${p.name}">` : `<div style="padding:8px;text-align:center;color:var(--muted)">${p.shop}</div>`;
-        card.innerHTML=`
-          <div class="img">${imgPart}</div>
-          <div class="pname">${escapeHtml(p.name)}</div>
-          <div class="shop">${escapeHtml(p.shop)}</div>
-          <div class="price">${formatRp(p.price)} + Fee ${formatRp(p.fee)}</div>
-          <button class="btn add" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee})">+ Titip</button>
-          <button class="btn quick" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee}, true)">Beli Cepat</button>
-        `;
-        productsEl.appendChild(card);
-      });
-      updateCartCount();
-    }
-
-    // escape helpers to avoid breaking inline onclick strings
-    function escapeJs(s){ return (s||'').replace(/'/g,"\\'").replace(/\n/g," "); }
-    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    function addToCart(name, price, openNow=false){
-      if(!cart[name]) cart[name] = {name, price, qty:0};
-      cart[name].qty++;
-      saveCart(); updateCartCount();
-      if(openNow) openCart();
-    }
-
-    function saveCart(){
-      localStorage.setItem("jastip_cart", JSON.stringify(cart));
-    }
-
-    function updateCartCount(){
-      const totalQty = Object.values(cart).reduce((a,b)=>a + b.qty,0);
-      cartCount.textContent = totalQty;
-      cartCount.style.display = totalQty>0 ? 'inline-block' : 'none';
-    }
-
-    function toggleCart(){
-      document.getElementById('cartdrawer').classList.toggle('active');
-      renderCart();
-    }
-
-    function openCart(){ document.getElementById('cartdrawer').classList.add('active'); renderCart(); }
-
-    function renderCart(){
-      const list=document.getElementById('cartitems');
-      const totalDiv=document.getElementById('carttotal');
-      list.innerHTML='';
-      let total=0;
-      const items=Object.values(cart);
-      if(items.length===0){ document.getElementById('cartdrawer').classList.remove('active'); return; }
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        list.innerHTML+=`
-          <div class="cart-item">
-            <div class="cart-item-name">${escapeHtml(i.name)}<br><small>${formatRp(i.price)}</small></div>
-            <div class="cart-controls">
-              <button onclick="changeQty('${escapeJs(i.name)}',-1)">-</button>
-              <span>${i.qty}</span>
-              <button onclick="changeQty('${escapeJs(i.name)}',1)">+</button>
-              <button onclick="removeItem('${escapeJs(i.name)}')">❌</button>
-            </div>
-          </div>`;
-      });
-      totalDiv.textContent='Total: '+formatRp(total);
-    }
-
-    function changeQty(name,delta){
-      if(!cart[name])return;
-      cart[name].qty+=delta;
-      if(cart[name].qty<=0) delete cart[name];
-      saveCart(); renderCart(); updateCartCount();
-    }
-
-    function removeItem(name){
-      delete cart[name];
-      saveCart(); renderCart(); updateCartCount();
-    }
-
-    function checkout(){
-      const items=Object.values(cart);
-      if(items.length===0) return alert('Keranjang kosong!');
-      const profile = getCurrentProfile();
-      const waNumber = profile ? profile.wa : '';
-      if(!waNumber){ alert('Nomor WhatsApp belum diatur di profil.'); return; }
-      let msg='Halo, saya mau titip:\n';
-      let total=0;
-      items.forEach(i=>{
-        const subtotal=i.price*i.qty; total+=subtotal;
-        msg+=`- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
-      });
-      msg+=`\nTotal: ${formatRp(total)}\n`;
-      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`,'_blank');
-    }
-
-    /******************************
-     * Init on load
-     ******************************/
-    window.addEventListener('load', function(){
-      // apply current profile if exists
-      if(profiles.length>0 && currentProfileId){
-        const p = getCurrentProfile();
-        if(p) applySetup(p);
-      }
-      // if no profiles, open modal to create
-      if(profiles.length === 0){
-        openSetupModal();
-      } else {
-        // try load products if current profile exists
-        if(currentProfileId) loadProducts();
-      }
-      updateCartCount();
-    });
-
-    // Expose some functions to global for inline onclick to work
-    window.openSetupModal = openSetupModal;
-    window.closeSetupModal = closeSetupModal;
-    window.saveProfile = saveProfile;
-    window.deleteCurrentProfile = deleteCurrentProfile;
-    window.resetProfiles = resetProfiles;
-    window.filterCategory = filterCategory;
-    window.addToCart = addToCart;
-    window.toggleCart = toggleCart;
-    window.changeQty = changeQty;
-    window.removeItem = removeItem;
-    window.checkout = checkout;
-    window.useProfile = useProfile;
-
+    loadProducts();
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
