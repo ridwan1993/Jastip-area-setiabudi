@@ -129,6 +129,15 @@ function updateCartCount() {
   cartCount.style.display = totalQty > 0 ? 'inline-block' : 'none';
 }
 
+function toggleCart() {
+  document.getElementById('cartdrawer').classList.toggle('active');
+  renderCart();
+}
+
+function openCart() {
+  document.getElementById('cartdrawer').classList.add('active');
+  renderCart();
+}
 
 function fillFormWithProfile(p) {
   document.getElementById('inputNama').value = p ? p.name : '';
