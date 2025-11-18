@@ -393,7 +393,6 @@ footer {
   color: var(--accent);
 }
 
-/* CART DRAWER HEADER */
 .cartdrawer-header {
   display: flex;
   justify-content: space-between;
