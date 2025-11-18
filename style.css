@@ -393,3 +393,40 @@ footer {
   color: var(--accent);
 }
 
+/* CART DRAWER HEADER */
+.cartdrawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.btn-minimize {
+  background: rgba(0,0,0,0.05);
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-minimize:hover {
+  background: rgba(0,0,0,0.12);
+}
+
+/* MINIMIZED STATE */
+.cartdrawer.minimized {
+  height: 50px;
+  overflow: hidden;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.cartdrawer.minimized h3 {
+  font-size: 14px;
+  color: var(--accent);
+  margin: 0;
+}
