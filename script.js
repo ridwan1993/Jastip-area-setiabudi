@@ -513,6 +513,23 @@ function escapeHtml(s) {
 }
 
 /******************************
+ * CART MINIMIZE FUNCTION
+ ******************************/
+function toggleCartMinimize() {
+  const drawer = document.getElementById('cartdrawer');
+  drawer.classList.toggle('minimized');
+
+  // Ubah ikon tombol
+  const btn = drawer.querySelector('.btn-minimize');
+  if (drawer.classList.contains('minimized')) {
+    btn.textContent = '▴'; // tanda panah atas
+  } else {
+    btn.textContent = '▾'; // tanda panah bawah
+  }
+}
+
+
+/******************************
  * CHECKOUT FUNCTION
  ******************************/
 function checkout() {
