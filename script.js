@@ -105,6 +105,31 @@ function useProfile(id) {
   loadProducts();
 }
 
+/******************************
+ * CART FUNCTIONS
+ ******************************/
+function addToCart(name, price, openNow = false) {
+  if (!cart[name]) cart[name] = { name, price, qty: 0 };
+  cart[name].qty++;
+  saveCart();
+  updateCartCount();   // <--- dipanggil di sini
+  if (openNow) openCart();
+}
+
+function saveCart() {
+  localStorage.setItem("jastip_cart", JSON.stringify(cart));
+}
+
+/******************************
+ * Fungsi ini yang kamu cari
+ ******************************/
+function updateCartCount() {
+  const totalQty = Object.values(cart).reduce((a, b) => a + b.qty, 0);
+  cartCount.textContent = totalQty;
+  cartCount.style.display = totalQty > 0 ? 'inline-block' : 'none';
+}
+
+
 function fillFormWithProfile(p) {
   document.getElementById('inputNama').value = p ? p.name : '';
   document.getElementById('inputDeskripsi').value = p ? p.desc : '';
