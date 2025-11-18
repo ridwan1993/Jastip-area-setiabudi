@@ -210,46 +210,23 @@ main { padding: 14px; }
     
 /* MODAL — iOS STYLE */
 .modal-backdrop {
-position:fixed; inset:0; background:rgba(0,0,0,0.45);
-display:flex; justify-content:center; align-items:flex-start;
-padding:24px; overflow:auto;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
 }
-
 
 .modal {
-background:white; width:100%; max-width:520px;
-border-radius:var(--radius); padding:20px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 18px;
+  width: 94%;
+  max-width: 480px;
+  box-shadow: var(--shadow-lg);
+  animation: pop .25s ease;
+  margin-top: 115px;
 }
-
-
-h3 { margin:0 0 4px; font-size:20px; }
-
-
-.steps { display:flex; gap:6px; margin-bottom:16px; }
-.step {
-flex:1; padding:10px; text-align:center; border-radius:var(--radius);
-background:#f1f1f1; cursor:pointer; font-size:14px;
-}
-.step.active { background:var(--accent); color:white; font-weight:600; }
-
-
-.field { margin-bottom:16px; }
-label.small { font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
-input, textarea {
-width:100%; padding:10px 12px; font-size:15px;
-border:1px solid var(--border); border-radius:var(--radius);
-}
-
-
-.hidden { display:none; }
-.row { display:flex; gap:14px; }
-.col { flex:1; }
-
-
-.btn-primary { background:var(--accent); color:white; border:none;
-padding:10px 18px; border-radius:var(--radius); font-weight:600; }
-.btn-ghost { background:#f1f1f1; border:none; padding:10px 18px; border-radius:var(--radius); }
-.danger { background:#e74c3c; color:white; border:none; padding:10px 18px; border-radius:var(--radius); }
 
 @keyframes pop {
   from { transform: scale(.97); opacity: 0; }
@@ -453,28 +430,6 @@ padding:10px 18px; border-radius:var(--radius); font-weight:600; }
   </div>
 
   <script>
-
-    function gotoStep(n){
-document.querySelectorAll('.step-content').forEach(e=>e.classList.add('hidden'));
-document.getElementById('step'+n).classList.remove('hidden');
-document.querySelectorAll('.step').forEach(e=>e.classList.remove('active'));
-document.getElementById('step'+n+'tab').classList.add('active');
-}
-
-
-function validateSheet(){
-const v = document.getElementById('inputSheet').value;
-const ok = v.includes('/spreadsheets/d/') && v.includes('export?format=csv');
-const status = document.getElementById('sheetStatus');
-status.textContent = ok ? '✔ Link valid' : '✖ Link tidak valid';
-status.style.color = ok ? 'green' : 'red';
-}
-
-
-function testProduk(){
-alert('Tes pengambilan data produk berlangsung...');
-}
-</script>
     /******************************
      * Storage keys & state
      ******************************/
@@ -903,4 +858,3 @@ alert('Tes pengambilan data produk berlangsung...');
   </script>
 </body>
 </html>
-
