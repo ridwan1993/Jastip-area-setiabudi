@@ -236,3 +236,224 @@ function resetProfiles() {
   productsEl.innerHTML = '';
   alert('Semua profil direset.');
 }
+
+/******************************
+ * APPLY SETUP (THEME, TEXT, WA)
+ ******************************/
+function applySetup(profile) {
+  if (!profile) return;
+
+  // Theme
+  try {
+    if (profile.theme) {
+      document.documentElement.style.setProperty('--accent', profile.theme.accent || '#2f8f4a');
+      document.documentElement.style.setProperty('--bg', profile.theme.bg || '#f7f9f8');
+      document.documentElement.style.setProperty('--card', profile.theme.card || '#ffffff');
+    }
+  } catch (e) { }
+
+  // Logo
+  if (profile.logo) {
+    logoEl.innerHTML = `<img width="50px" src="${profile.logo}" alt="${profile.name}">`;
+  } else {
+    logoEl.textContent = profile.name ? profile.name.slice(0, 2).toUpperCase() : 'JS';
+  }
+
+  // Texts
+  subtitleEl.textContent = profile.name || '';
+  heroDescEl.textContent = profile.desc || '';
+
+  // WhatsApp
+  waLink.href = `https://wa.me/${profile.wa}`;
+
+  // Footer
+  document.getElementById('footerText').textContent =
+    `${profile.name} • Jadwal: Senin–Jumat • Order cutoff 16:00`;
+}
+
+function applyDefaultTheme() {
+  document.documentElement.style.setProperty('--accent', '#2f8f4a');
+  document.documentElement.style.setProperty('--bg', '#f7f9f8');
+  document.documentElement.style.setProperty('--card', '#ffffff');
+
+  logoEl.textContent = 'JS';
+  subtitleEl.textContent = 'Skincare & Bodycare — Fee Rp10.000/item';
+  heroDescEl.textContent =
+    'Order sebelum 16:00, saya belanja sore ini dan sampai Cilejit malamnya. Free kemasan rapi.';
+  waLink.href = '#';
+  document.getElementById('footerText').textContent =
+    'Jastip • Jadwal: Senin–Jumat • Order cutoff 16:00';
+}
+
+/******************************
+ * PRODUCTS & CATEGORY
+ ******************************/
+function loadProducts() {
+  const profile = getCurrentProfile();
+  if (!profile) {
+    alert('Pilih atau buat profil terlebih dahulu.');
+    return;
+  }
+
+  const SHEET_URL = profile.sheet;
+  fetch(SHEET_URL)
+    .then(res => {
+      if (!res.ok) throw new Error('Fetch gagal');
+      return res.text();
+    })
+    .then(csv => {
+      const rows = csv.split("\n").slice(1).map(r => r.trim()).filter(Boolean);
+      PRODUCTS = rows.map(r => {
+        // Simple CSV parsing (assuming no commas in fields)
+        const parts = r.split(",");
+        const [name, shop, price, img, fee, category, promo] = parts;
+        return {
+          id: Math.random(),
+          name: name ? name.trim() : '',
+          shop: shop ? shop.trim() : '',
+          price: +(price || 0),
+          img: img ? img.trim() : '',
+          fee: +(fee || 0),
+          category: category ? category.trim() : '',
+          promo: (promo || '').trim().toLowerCase()
+        };
+      }).filter(p => p.name);
+
+      populateCategories();
+      renderProducts();
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Gagal memuat data dari Google Sheet. Pastikan link CSV valid dan dapat diakses (share: anyone with link).');
+    });
+}
+function populateCategories() {
+  const filtersEl = document.getElementById('categoryFilters');
+  filtersEl.innerHTML = '<div class="chip active" onclick="filterCategory(\'\')">Semua</div>';
+
+  const cats = [...new Set(PRODUCTS.map(p => p.category))].filter(Boolean);
+  cats.forEach(cat => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.textContent = cat;
+    chip.onclick = () => filterCategory(cat);
+    filtersEl.appendChild(chip);
+  });
+}
+
+function filterCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+
+  const selected = [...document.querySelectorAll('.chip')].find(c => c.textContent === cat);
+  if (selected) selected.classList.add('active');
+  else document.querySelector('.chip:first-child').classList.add('active');
+
+  renderProducts();
+}
+
+function renderProducts() {
+  productsEl.innerHTML = '';
+
+  PRODUCTS.filter(p => !currentCategory || p.category === currentCategory)
+    .forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const imgPart = p.img
+        ? `<img src="${p.img}" alt="${p.name}">`
+        : `<div style="padding:8px;text-align:center;color:var(--muted)">${p.shop}</div>`;
+
+      card.innerHTML = `
+        <div class="img">${imgPart}</div>
+        <div class="pname">${escapeHtml(p.name)}</div>
+        <div class="shop">${escapeHtml(p.shop)}</div>
+        <div class="price">${formatRp(p.price)} + Fee ${formatRp(p.fee)}</div>
+        <button class="btn add" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee})">+ Titip</button>
+        <button class="btn quick" onclick="addToCart('${escapeJs(p.name)}', ${p.price + p.fee}, true)">Beli Cepat</button>
+      `;
+
+      productsEl.appendChild(card);
+    });
+
+  updateCartCount();
+}
+
+/******************************
+ * ESCAPE HELPERS
+ ******************************/
+function escapeJs(s) {
+  return (s || '').replace(/'/g, "\\'").replace(/\n/g, " ");
+}
+
+function escapeHtml(s) {
+  return (s || '').replace(/&/g, '&amp;')
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;');
+}
+
+/******************************
+ * CHECKOUT FUNCTION
+ ******************************/
+function checkout() {
+  const items = Object.values(cart);
+  if (items.length === 0) return alert('Keranjang kosong!');
+
+  const profile = getCurrentProfile();
+  const waNumber = profile ? profile.wa : '';
+  if (!waNumber) {
+    alert('Nomor WhatsApp belum diatur di profil.');
+    return;
+  }
+
+  let msg = 'Halo, saya mau titip:\n';
+  let total = 0;
+
+  items.forEach(i => {
+    const subtotal = i.price * i.qty;
+    total += subtotal;
+    msg += `- ${i.name} (${i.qty}x ${formatRp(i.price)})\n`;
+  });
+
+  msg += `\nTotal: ${formatRp(total)}\n`;
+
+  window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+/******************************
+ * INIT ON LOAD
+ ******************************/
+window.addEventListener('load', function () {
+  // Apply current profile if exists
+  if (profiles.length > 0 && currentProfileId) {
+    const p = getCurrentProfile();
+    if (p) applySetup(p);
+  }
+
+  // If no profiles, open setup modal
+  if (profiles.length === 0) {
+    openSetupModal();
+  } else {
+    // Load products if profile exists
+    if (currentProfileId) loadProducts();
+  }
+
+  updateCartCount();
+});
+
+/******************************
+ * EXPOSE FUNCTIONS GLOBALLY
+ ******************************/
+window.openSetupModal = openSetupModal;
+window.closeSetupModal = closeSetupModal;
+window.saveProfile = saveProfile;
+window.deleteCurrentProfile = deleteCurrentProfile;
+window.resetProfiles = resetProfiles;
+window.filterCategory = filterCategory;
+window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.changeQty = changeQty;
+window.removeItem = removeItem;
+window.checkout = checkout;
+window.useProfile = useProfile;
+
