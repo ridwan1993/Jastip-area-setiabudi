@@ -319,6 +319,45 @@ function resetProfiles() {
 }
 
 /******************************
+ * FORM WIZARD NAVIGATION
+ ******************************/
+let currentStep = 1;
+const totalSteps = 4;
+
+function showStep(step) {
+  document.querySelectorAll('.wizard-step').forEach(s => s.style.display = 'none');
+  document.querySelector(`.wizard-step[data-step="${step}"]`).style.display = 'block';
+
+  // kontrol tombol
+  document.getElementById('prevBtn').style.visibility = step === 1 ? 'hidden' : 'visible';
+  document.getElementById('nextBtn').style.display = step < totalSteps ? 'inline-block' : 'none';
+  document.getElementById('saveBtn').style.display = step === totalSteps ? 'inline-block' : 'none';
+}
+
+function nextStep() {
+  if (currentStep < totalSteps) {
+    currentStep++;
+    showStep(currentStep);
+  }
+}
+
+function prevStep() {
+  if (currentStep > 1) {
+    currentStep--;
+    showStep(currentStep);
+  }
+}
+
+// jalankan saat modal dibuka
+const originalOpen = openSetupModal;
+openSetupModal = function() {
+  originalOpen(); // jalankan fungsi asli
+  currentStep = 1;
+  showStep(currentStep);
+};
+
+
+/******************************
  * APPLY SETUP (THEME, TEXT, WA)
  ******************************/
 function applySetup(profile) {
