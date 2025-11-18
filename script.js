@@ -139,6 +139,53 @@ function openCart() {
   renderCart();
 }
 
+function renderCart() {
+  const list = document.getElementById('cartitems');
+  const totalDiv = document.getElementById('carttotal');
+  list.innerHTML = '';
+
+  let total = 0;
+  const items = Object.values(cart);
+  if (items.length === 0) {
+    document.getElementById('cartdrawer').classList.remove('active');
+    return;
+  }
+
+  items.forEach(i => {
+    const subtotal = i.price * i.qty;
+    total += subtotal;
+    list.innerHTML += `
+      <div class="cart-item">
+        <div class="cart-item-name">${escapeHtml(i.name)}<br><small>${formatRp(i.price)}</small></div>
+        <div class="cart-controls">
+          <button onclick="changeQty('${escapeJs(i.name)}', -1)">-</button>
+          <span>${i.qty}</span>
+          <button onclick="changeQty('${escapeJs(i.name)}', 1)">+</button>
+          <button onclick="removeItem('${escapeJs(i.name)}')">❌</button>
+        </div>
+      </div>
+    `;
+  });
+
+  totalDiv.textContent = 'Total: ' + formatRp(total);
+}
+
+function changeQty(name, delta) {
+  if (!cart[name]) return;
+  cart[name].qty += delta;
+  if (cart[name].qty <= 0) delete cart[name];
+  saveCart();
+  renderCart();
+  updateCartCount();
+}
+
+function removeItem(name) {
+  delete cart[name];
+  saveCart();
+  renderCart();
+  updateCartCount();
+}
+
 function fillFormWithProfile(p) {
   document.getElementById('inputNama').value = p ? p.name : '';
   document.getElementById('inputDeskripsi').value = p ? p.desc : '';
