@@ -47,15 +47,16 @@
   </button>
 
   <div id="cartdrawer" class="cartdrawer">
-  <div class="cartdrawer-header">
-    <h3>🛍️ Pesanan Kamu</h3>
-    <button class="btn-minimize" onclick="toggleCartMinimize()">▾</button>
+    <div class="cartdrawer-header">
+      <h3>🛍️ Pesanan Kamu</h3>
+      <button class="btn-minimize" onclick="minimizeCart()">−</button>
+    </div>
+  
+    <div id="cartitems"></div>
+    <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
+    <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
   </div>
 
-  <div id="cartitems"></div>
-  <div id="carttotal" style="margin-top:8px;font-weight:700"></div>
-  <button class="checkout" onclick="checkout()">Kirim via WhatsApp</button>
-</div>
 
   <footer>
     <div id="footerText">
@@ -220,5 +221,6 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
