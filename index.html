@@ -62,7 +62,7 @@
     </div>
   </footer>
 
-  <!-- Modal Pengaturan -->
+  <!-- Modal Pengaturan 
   <div id="setupModal" class="modal-backdrop" style="display:none;overflow:auto;">
     <div class="modal" role="dialog" aria-modal="true">
       <div id="headermodal"
@@ -72,8 +72,7 @@
       </div>
 
       <div style="display:flex; flex-direction:column; gap:18px; padding-bottom:10px; border-top:1px dashed #eee; padding-top:16px;">
-
-        <!-- FORM -->
+ 
         <div class="field">
           <label class="small" style="font-weight:600;">Nama Usaha</label>
           <input id="inputNama" type="text" placeholder="Masukkan nama toko kamu">
@@ -117,8 +116,6 @@
           </div>
         </div>
       </div>
-
-      <!-- ACTION BUTTONS -->
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; gap:10px; flex-wrap:wrap;">
         <div>
           <button class="btn-ghost" onclick="closeSetupModal()">Batal</button>
@@ -131,8 +128,92 @@
       </div>
     </div>
   </div>
+  -->
+
+  <div id="setupModal" class="modal-backdrop" style="display:none;overflow:auto;">
+  <div class="modal" role="dialog" aria-modal="true">
+
+    <div id="headermodal"
+         style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="margin:0; font-size:18px; font-weight:700;">Pengaturan Toko / Profil</h3>
+      <button class="modal-close" onclick="closeSetupModal()">×</button>
+    </div>
+
+    <!-- WIZARD CONTAINER -->
+    <div id="wizardSteps">
+
+      <!-- STEP 1 -->
+      <div class="wizard-step" data-step="1">
+        <h4>🧾 Informasi Dasar</h4>
+        <div class="field">
+          <label>Nama Usaha</label>
+          <input id="inputNama" type="text" placeholder="Masukkan nama toko kamu">
+        </div>
+        <div class="field">
+          <label>Deskripsi Usaha</label>
+          <textarea id="inputDeskripsi" placeholder="Deskripsi singkat toko..." rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="wizard-step" data-step="2" style="display:none;">
+        <h4>📞 Kontak & Data Produk</h4>
+        <div class="field">
+          <label>No WhatsApp</label>
+          <input id="inputWA" type="text" placeholder="62812xxxxxxx">
+          <div class="small" style="color:var(--muted)">Gunakan format diawali 62.</div>
+        </div>
+
+        <div class="field">
+          <label>Google Sheet CSV</label>
+          <input id="inputSheet" type="text" placeholder="Link CSV Google Sheet">
+          <div class="small" style="color:var(--muted)">
+            Wajib mengandung <code>export?format=csv</code>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="wizard-step" data-step="3" style="display:none;">
+        <h4>🎨 Tampilan Toko</h4>
+        <div class="row" style="display:flex; gap:12px;">
+          <div class="col field" style="flex:1;">
+            <label>Upload Logo</label>
+            <input id="inputLogo" type="file" accept="image/*">
+          </div>
+          <div class="col field" style="flex:1;">
+            <label>Warna Tema</label>
+            <input id="inputAccent" type="color" value="#2f8f4a" style="height:42px;">
+          </div>
+        </div>
+
+        <div class="row" style="display:flex; gap:12px; margin-top:10px;">
+          <input id="inputBg" type="color" value="#f7f9f8" style="flex:1; height:36px;">
+          <input id="inputCard" type="color" value="#ffffff" style="flex:1; height:36px;">
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="wizard-step" data-step="4" style="display:none;">
+        <h4>✅ Simpan Profil</h4>
+        <p>Pastikan semua data sudah benar. Klik “Simpan Profil” untuk menyimpan dan memuat produk dari Google Sheet.</p>
+      </div>
+    </div>
+
+    <!-- NAVIGATION BUTTONS -->
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      <button id="prevBtn" class="btn-ghost" onclick="prevStep()">← Kembali</button>
+      <div>
+        <button id="nextBtn" class="btn-primary" onclick="nextStep()">Lanjut →</button>
+        <button id="saveBtn" class="btn-primary" onclick="saveProfile()" style="display:none;">Simpan Profil</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
   <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
+
